@@ -15,10 +15,7 @@ export type tierItem = {
   item_image_path: string;
 };
 
-// function App() {
-//   return (
 export const TierTable = (props: TierTableProps) => {
-  // const a = "123";
   const { tierItemList } = props;
 
   return (
