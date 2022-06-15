@@ -1,4 +1,5 @@
 import "../App.css";
+import { TierTableRow } from "../tier-table-row/TierTableRow";
 
 export type TierTableProps = {
   // item_id: number;
@@ -23,102 +24,47 @@ export const TierTable = (props: TierTableProps) => {
       <tbody>
         <tr>
           {tierItemList.some((x) => x.item_rate >= 2000) ? (
-            <>
-              <th style={{ color: "#ff7f7f" }}>2000~</th>
-              <td>
-                {tierItemList
-                  .filter((row) => row.item_rate >= 2000)
-                  .map((row) => (
-                    <img
-                      key={row.item_id}
-                      src={`https://www.tierrating.com/create${row.item_image_path.slice(1)}`}
-                      alt={`${row.item_name}`}
-                      title={`${row.item_name} / ${row.item_rate}`}
-                      width={60}
-                    />
-                  ))}
-              </td>
-            </>
+            <TierTableRow
+              tierItemList={tierItemList.filter((row) => row.item_rate >= 2000)}
+              colorCode="#ff7f7f"
+              headerTitle="2000~~~"
+            />
           ) : undefined}
         </tr>
         <tr>
           {tierItemList.some((x) => x.item_rate >= 1800) ? (
-            <>
-              <th style={{ color: "#ffbf7f" }}>1800~</th>
-              <td>
-                {tierItemList
-                  .filter((row) => row.item_rate < 2000 && row.item_rate >= 1800)
-                  .map((row) => (
-                    <img
-                      key={row.item_id}
-                      src={`https://www.tierrating.com/create${row.item_image_path.slice(1)}`}
-                      alt={`${row.item_name}`}
-                      title={`${row.item_name} / ${row.item_rate}`}
-                      width={60}
-                    />
-                  ))}
-              </td>
-            </>
+            <TierTableRow
+              tierItemList={tierItemList.filter((row) => row.item_rate < 2000 && row.item_rate >= 1800)}
+              colorCode="#ffbf7f"
+              headerTitle="1800~~~"
+            />
           ) : undefined}
         </tr>
         <tr>
           {tierItemList.some((x) => x.item_rate >= 1600) ? (
-            <>
-              <th style={{ backgroundColor: "#ffff7f" }}>1600~</th>
-              <td>
-                {tierItemList
-                  .filter((row) => row.item_rate < 1800 && row.item_rate >= 1600)
-                  .map((row) => (
-                    <img
-                      key={row.item_id}
-                      src={`https://www.tierrating.com/create${row.item_image_path.slice(1)}`}
-                      alt={`${row.item_name}`}
-                      title={`${row.item_name} / ${row.item_rate}`}
-                      width={60}
-                    />
-                  ))}
-              </td>
-            </>
+            <TierTableRow
+              tierItemList={tierItemList.filter((row) => row.item_rate < 1800 && row.item_rate >= 1600)}
+              colorCode="#ffff7f"
+              headerTitle="1600~~~"
+            />
           ) : undefined}
         </tr>
         <tr>
           {tierItemList.some((x) => x.item_rate >= 1400) ? (
-            <>
-              <th style={{ backgroundColor: "#bfff7f" }}>1400~</th>
-              <td>
-                {tierItemList
-                  .filter((row: { item_rate: number }) => row.item_rate < 1600 && row.item_rate >= 1400)
-                  .map((row) => (
-                    <img
-                      key={row.item_id}
-                      src={`https://www.tierrating.com/create${row.item_image_path.slice(1)}`}
-                      alt={`${row.item_name}`}
-                      title={`${row.item_name} / ${row.item_rate}`}
-                      width={60}
-                    />
-                  ))}
-              </td>
-            </>
+            <TierTableRow
+              tierItemList={tierItemList.filter((row) => row.item_rate < 1600 && row.item_rate >= 1400)}
+              colorCode="#bfff7f"
+              headerTitle="1400~~~"
+            />
           ) : undefined}
         </tr>
         <tr>
           {tierItemList.some((x) => x.item_rate >= 1200) ? (
-            <>
-              <th style={{ backgroundColor: "#7fff7f" }}>1200~</th>
-              <td>
-                {tierItemList
-                  .filter((row) => row.item_rate < 1400 && row.item_rate >= 1200)
-                  .map((row) => (
-                    <img
-                      key={row.item_id}
-                      src={`https://www.tierrating.com/create${row.item_image_path.slice(1)}`}
-                      alt={`${row.item_name}`}
-                      title={`${row.item_name} / ${row.item_rate}`}
-                      width={60}
-                    />
-                  ))}
-              </td>
-            </>
+            <TierTableRow
+              tierItemList={tierItemList.filter((row) => row.item_rate < 1400 && row.item_rate >= 1200)}
+              colorCode="#7fff7f"
+              headerTitle="1200~~~"
+            />
           ) : undefined}
         </tr>
       </tbody>
