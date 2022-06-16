@@ -4,6 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import "../App.css";
 import axios, { AxiosError, AxiosResponse } from "axios";
 import image from "../testimg.png"; // ここでパス指定して変数として利用する
+import { getKey } from "../Utils/Utils";
 
 type jsonComment = {
   name: string;
@@ -46,9 +47,7 @@ const Rating: React.FC<Props> = (props) => {
 
   useEffect(() => {
     axios
-      .get<jsonComment[]>(
-        `https://www.tierrating.com/api/ratingitem/?id=${pageId}&key=${Math.random().toString(36).slice(-8)}`
-      )
+      .get<jsonComment[]>(`https://www.tierrating.com/api/ratingitem/?id=${pageId}&key=${getKey(8)}`)
       .then((res) => {
         setJsonComments(res.data);
       })
@@ -70,9 +69,7 @@ const Rating: React.FC<Props> = (props) => {
 
     axios
       .get<CalcResult[]>(
-        `https://www.tierrating.com/api/calculating/?id=${itemId}&opposite=${oppositeId}&key=${Math.random()
-          .toString(36)
-          .slice(-8)}`
+        `https://www.tierrating.com/api/calculating/?id=${itemId}&opposite=${oppositeId}&key=${getKey(8)}`
       )
       .then((res) => {
         // NOTE 検証用

@@ -19,7 +19,7 @@ export const TierTableRow = (props: TierTableRowProps) => {
   const { tierItemList, colorCode, headerTitle } = props;
 
   return (
-    <tr>
+    <>
       <th style={{ backgroundColor: colorCode }}>{headerTitle}</th>
       <td>
         {tierItemList.map((row) => (
@@ -32,6 +32,6 @@ export const TierTableRow = (props: TierTableRowProps) => {
           />
         ))}
       </td>
-    </tr>
+    </>
   );
 };

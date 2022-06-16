@@ -3,6 +3,7 @@ import React, { FC, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import "../App.css";
 import axios, { AxiosError, AxiosResponse } from "axios";
+import { getKey } from "../Utils/Utils";
 // import image from "../testimg.png"; // ここでパス指定して変数として利用する
 
 type jsonPost = {
@@ -23,7 +24,7 @@ const List: FC = () => {
   useEffect(() => {
     axios
       // .get<jsonPost[]>("https://jsonplaceholder.typicode.com/posts")
-      .get<jsonPost[]>(`https://www.tierrating.com/api/pagelist/?key=${Math.random().toString(36).slice(-8)}`)
+      .get<jsonPost[]>(`https://www.tierrating.com/api/pagelist/?key=${getKey(8)}`)
       .then((res) => {
         // NOTE 検証用
         console.log(res.data);
@@ -42,7 +43,7 @@ const List: FC = () => {
 
   useEffect(() => {
     axios
-      .get<jsonTagName[]>(`https://www.tierrating.com/api/taglist/?key=${Math.random().toString(36).slice(-8)}`)
+      .get<jsonTagName[]>(`https://www.tierrating.com/api/taglist/?key=${getKey(8)}`)
       .then((res) => {
         setJsonTagName(res.data);
       })

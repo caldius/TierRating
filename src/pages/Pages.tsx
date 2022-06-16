@@ -5,6 +5,7 @@ import axios, { AxiosError, AxiosResponse } from "axios";
 import "../App.css";
 import image from "../testimg.png"; // ここでパス指定して変数として利用する
 import Rating from "../rating/Rating";
+import { getKey } from "../Utils/Utils";
 
 import { TierTable } from "../tier-table/TierTable";
 // import { color } from "@mui/system";
@@ -45,9 +46,7 @@ const Pages: FC = () => {
 
   useEffect(() => {
     axios
-      .get<jsonComment[]>(
-        `https://www.tierrating.com/api/itemlist/?id=${pageId}&key=${Math.random().toString(36).slice(-8)}`
-      )
+      .get<jsonComment[]>(`https://www.tierrating.com/api/itemlist/?id=${pageId}&key=${getKey(8)}}`)
       .then((res) => {
         // NOTE 検証用
         console.log(res.data);
