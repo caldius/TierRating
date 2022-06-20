@@ -34,10 +34,13 @@ type Props = {
   /** 値変更時のイベント */
   // eslint-disable-next-line react/require-default-props
   IncrementupdateCount?: () => void;
+
+  language: string | undefined;
+  whichIs: string | undefined;
 };
 
 const Rating: React.FC<Props> = (props) => {
-  const { pageId, setUpdateCount, IncrementupdateCount } = props;
+  const { pageId, setUpdateCount, IncrementupdateCount, language, whichIs } = props;
 
   // NOTE
 
@@ -88,7 +91,13 @@ const Rating: React.FC<Props> = (props) => {
   return (
     <div style={{ border: "dotted 5Px pink" }}>
       <h1>This is Rating</h1>
-
+      <p>
+        {language === "ja"
+          ? `どっちが${whichIs} ？`
+          : language === "en"
+          ? `Which is ${whichIs} ?`
+          : "unknown Langage is Selected"}
+      </p>
       {jsonComments
         .filter((_, index) => index <= 1)
         .map((row) => (

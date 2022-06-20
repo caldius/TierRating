@@ -1,3 +1,4 @@
+import { useState } from "react";
 import "../App.css";
 import { TierTableRow } from "../tier-table-row/TierTableRow";
 
@@ -17,57 +18,86 @@ export type tierItem = {
 };
 
 export const TierTable = (props: TierTableProps) => {
+  const [isDispItemInfo, setIsDispItemInfo] = useState(false);
+
+  // const handleChangeIsDispItemInfo = (e: React.ChangeEvent<HTMLInputElement >) => {
+  //   console.log(e);
+  //   setIsDispItemInfo(e.target.);
+  // };
+
   const { tierItemList } = props;
 
   return (
-    <table style={{ border: "dotted 5Px violet" }}>
-      <tbody>
-        <tr>
-          {tierItemList.some((x) => x.item_rate >= 2000) ? (
+    <>
+      <label htmlFor="isDispItemName">
+        <input
+          type="checkbox"
+          checked={isDispItemInfo}
+          id="isDispItemName"
+          onChange={() => setIsDispItemInfo(!isDispItemInfo)}
+        />
+        レート表示
+      </label>
+      <table style={{ backgroundColor: "black" }}>
+        <tbody style={{ backgroundColor: "dimgray" }}>
+          <tr>
             <TierTableRow
               tierItemList={tierItemList.filter((row) => row.item_rate >= 2000)}
               colorCode="#ff7f7f"
               headerTitle="2000~~~"
+              isDispItemInfo={isDispItemInfo}
             />
-          ) : undefined}
-        </tr>
-        <tr>
-          {tierItemList.some((x) => x.item_rate >= 1800) ? (
+          </tr>
+          <tr>
             <TierTableRow
               tierItemList={tierItemList.filter((row) => row.item_rate < 2000 && row.item_rate >= 1800)}
               colorCode="#ffbf7f"
               headerTitle="1800~~~"
+              isDispItemInfo={isDispItemInfo}
             />
-          ) : undefined}
-        </tr>
-        <tr>
-          {tierItemList.some((x) => x.item_rate >= 1600) ? (
+          </tr>
+          <tr>
             <TierTableRow
               tierItemList={tierItemList.filter((row) => row.item_rate < 1800 && row.item_rate >= 1600)}
               colorCode="#ffff7f"
               headerTitle="1600~~~"
+              isDispItemInfo={isDispItemInfo}
             />
-          ) : undefined}
-        </tr>
-        <tr>
-          {tierItemList.some((x) => x.item_rate >= 1400) ? (
+          </tr>
+          <tr>
             <TierTableRow
               tierItemList={tierItemList.filter((row) => row.item_rate < 1600 && row.item_rate >= 1400)}
               colorCode="#bfff7f"
               headerTitle="1400~~~"
+              isDispItemInfo={isDispItemInfo}
             />
-          ) : undefined}
-        </tr>
-        <tr>
-          {tierItemList.some((x) => x.item_rate >= 1200) ? (
+          </tr>
+          <tr>
             <TierTableRow
               tierItemList={tierItemList.filter((row) => row.item_rate < 1400 && row.item_rate >= 1200)}
               colorCode="#7fff7f"
               headerTitle="1200~~~"
+              isDispItemInfo={isDispItemInfo}
             />
-          ) : undefined}
-        </tr>
-      </tbody>
-    </table>
+          </tr>
+          <tr>
+            <TierTableRow
+              tierItemList={tierItemList.filter((row) => row.item_rate < 1200 && row.item_rate >= 1000)}
+              colorCode="#7fff7f"
+              headerTitle="1000~~~"
+              isDispItemInfo={isDispItemInfo}
+            />
+          </tr>
+          <tr>
+            <TierTableRow
+              tierItemList={tierItemList.filter((row) => row.item_rate < 1000)}
+              colorCode="#7fff7f"
+              headerTitle="~~999"
+              isDispItemInfo={isDispItemInfo}
+            />
+          </tr>
+        </tbody>
+      </table>
+    </>
   );
 };

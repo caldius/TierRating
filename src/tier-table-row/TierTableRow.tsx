@@ -6,6 +6,8 @@ export type TierTableRowProps = {
   colorCode: string;
   /** 行ヘッダ文字列 */
   headerTitle: string;
+
+  isDispItemInfo: boolean;
 };
 
 export type tierItem = {
@@ -16,20 +18,28 @@ export type tierItem = {
 };
 
 export const TierTableRow = (props: TierTableRowProps) => {
-  const { tierItemList, colorCode, headerTitle } = props;
+  const { tierItemList, colorCode, headerTitle, isDispItemInfo } = props;
 
   return (
     <>
       <th style={{ backgroundColor: colorCode }}>{headerTitle}</th>
       <td>
         {tierItemList.map((row) => (
-          <img
-            key={row.item_id}
-            src={`https://www.tierrating.com/create${row.item_image_path.slice(1)}`}
-            alt={`${row.item_name}`}
-            title={`${row.item_name} / ${row.item_rate}`}
-            width={60}
-          />
+          <div style={{ display: "inline-block", textAlign: "center" }} key={row.item_id}>
+            <img
+              // key={row.item_id}
+              src={`https://www.tierrating.com/create${row.item_image_path.slice(1)}`}
+              alt={`${row.item_name}`}
+              title={`${row.item_name} / ${row.item_rate}`}
+              width={60}
+            />
+            {isDispItemInfo ? (
+              <>
+                <p style={{ marginBlock: 0, fontSize: 8 }}>{row.item_name}</p>
+                <p style={{ marginBlock: 0, fontSize: 8 }}>{`/ ${row.item_rate}`}</p>
+              </>
+            ) : undefined}
+          </div>
         ))}
       </td>
     </>

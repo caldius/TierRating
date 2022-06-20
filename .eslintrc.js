@@ -31,6 +31,7 @@ module.exports = {
   rules: {
     // occur error in `import React from 'react'` with react-scripts 4.0.1
     "no-use-before-define": "off",
+    "no-nested-ternary": "off",
     "react/jsx-props-no-spreading": ["off"],
     "@typescript-eslint/no-use-before-define": ["error"],
     "@typescript-eslint/restrict-template-expressions": "off",
