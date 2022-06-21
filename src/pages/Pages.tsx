@@ -80,6 +80,8 @@ const Pages: FC = () => {
   return (
     <div style={{ border: "dotted 5Px cyan" }} key={updateCount}>
       <h1>{pageInfo?.page_name}</h1>
+      <p>{pageInfo?.page_description}</p>
+
       {/* NOTE setUpdateCountを渡す */}
       <Rating
         pageId={pageId || ""}
@@ -88,7 +90,6 @@ const Pages: FC = () => {
         language={pageInfo?.language}
         whichIs={pageInfo?.which_is}
       />
-      <p>pageIdは{pageId} です。</p>
       <Link to="/" />
       <TierTable tierItemList={itemInfoList} />
 

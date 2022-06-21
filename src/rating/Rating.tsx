@@ -90,14 +90,13 @@ const Rating: React.FC<Props> = (props) => {
 
   return (
     <div style={{ border: "dotted 5Px pink" }}>
-      <h1>This is Rating</h1>
-      <p>
+      <h1>
         {language === "ja"
           ? `どっちが${whichIs} ？`
           : language === "en"
           ? `Which is ${whichIs} ?`
           : "unknown Langage is Selected"}
-      </p>
+      </h1>
       {jsonComments
         .filter((_, index) => index <= 1)
         .map((row) => (

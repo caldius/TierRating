@@ -6,10 +6,16 @@ import "./App.css";
 const Header: FC = () => (
   <div style={{ border: "dotted 5Px lime" }}>
     <h1>TierRating.com</h1>
-    <a href="/">Home</a>
-
-    <Link to="/list">[List] </Link>
-    <Link to="/about">[About]</Link>
+    {/* TODO:styleごちゃごちゃ書くかリンクアイテムみたいなものを設定して並べたいかなあ？ */}
+    <Link to="/">
+      <span>[Home]</span>
+    </Link>
+    <Link to="/list">
+      <span>[List]</span>
+    </Link>
+    <Link to="/about">
+      <span>[About]</span>
+    </Link>
   </div>
 );
 

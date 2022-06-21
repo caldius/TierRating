@@ -2,16 +2,18 @@ import React, { FC } from "react";
 import { Link } from "react-router-dom";
 import "../App.css";
 
-import image from "../testimg.png"; // ここでパス指定して変数として利用する
+// import image from "../testimg.png"; // ここでパス指定して変数として利用する
 
-// function App() {
-//   return (
 const Home: FC = () => (
   <>
-    <h1>This is Home</h1>
-
+    <Link to="/">
+      <h1>[Home]</h1>
+    </Link>
+    <Link to="/list">
+      <h1>[List]</h1>
+    </Link>
     <Link to="/about">
-      <img src={image} alt="aaa" />
+      <h1>[About]</h1>
     </Link>
   </>
 );
