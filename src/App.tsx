@@ -5,7 +5,7 @@ import { Routes, Route, BrowserRouter } from "react-router-dom";
 
 import Home from "./home/Home";
 import About from "./about/About";
-import List from "./list/List";
+import PageList from "./page-list/PageList";
 import Header from "./Header";
 // import Create from "./create/Create";
 import Pages from "./pages/Pages";
@@ -16,7 +16,7 @@ const App: FC = () => (
     <Routes>
       <Route path="/" element={<Home />} />
       <Route path="/about" element={<About />} />
-      <Route path="/list" element={<List />} />
+      <Route path="/list" element={<PageList />} />
       {/* <Route path="/create" element={<Create />} /> */}
       <Route path="/pages/:pageId" element={<Pages />} />
     </Routes>

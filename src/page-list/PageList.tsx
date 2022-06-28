@@ -3,6 +3,7 @@ import React, { FC, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import "../App.css";
 import axios, { AxiosError, AxiosResponse } from "axios";
+import { Chip } from "@material-ui/core";
 import { getKey } from "../Utils/Utils";
 // import image from "../testimg.png"; // ここでパス指定して変数として利用する
 
@@ -18,7 +19,7 @@ type IErrorResponse = {
   message: string;
 };
 
-const List: FC = () => {
+const PageList: FC = () => {
   const [jsonLists, setJsonLists] = useState<jsonPost[]>([]);
 
   useEffect(() => {
@@ -61,22 +62,6 @@ const List: FC = () => {
     );
   };
 
-  // 描画前にタグ一覧を取得結果から生成する
-  // 1.tag_nameを全部取得して,2.flatにして、3.重複を除外してソート
-  // TODO SQLから取ったほうが多分楽なのでそのうち直す
-  //      ※そうしないとソート後に消滅するかも
-  // const tagNameList: string[] = Array.from(
-  //   new Set(
-  //     jsonLists
-  //       .filter((x) => x.tag_name !== undefined)
-  //       .map((x) => x.tag_name)
-  //       .flat()
-  //       .sort()
-  //   )
-  // );
-
-  // const tagNameList: string[] = jsonTagName;
-
   return (
     <>
       <h1>This is ListPage</h1>
@@ -99,15 +84,27 @@ const List: FC = () => {
             <li key={row.page_id}>
               <Link to={`/pages/${row.page_id}`}>{row.page_name} </Link>
               {row.tag_name?.map((x) => (
-                <span style={{ padding: 1, border: "dotted 3Px brown" }} key={x}>
-                  {x}
-                </span>
+                <Chip color="primary" size="small" style={{ fontSize: "0.2em" }} key={x} label={x} variant="outlined" />
               ))}
             </li>
           ))}
       </ol>
+
+      <p>
+        {/* isDispがFalseのものは表示しない ※初期値はundefinedは許可 */}
+        {jsonLists
+          .filter((x) => x.isDisp !== false)
+          .map((row) => (
+            <li key={row.page_id}>
+              <Link to={`/pages/${row.page_id}`}>{row.page_name} </Link>
+              {row.tag_name?.map((x) => (
+                <Chip color="primary" size="small" style={{ fontSize: "0.2em" }} key={x} label={x} variant="outlined" />
+              ))}
+            </li>
+          ))}
+      </p>
     </>
   );
 };
 
-export default List;
+export default PageList;
