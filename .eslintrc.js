@@ -35,6 +35,7 @@ module.exports = {
     "react/jsx-props-no-spreading": ["off"],
     "@typescript-eslint/no-use-before-define": ["error"],
     "@typescript-eslint/restrict-template-expressions": "off",
+    "@typescript-eslint/no-misused-promises": "off",
     "lines-between-class-members": [
       "error",
       "always",

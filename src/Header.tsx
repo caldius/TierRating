@@ -33,6 +33,12 @@ const Header: FC = () => {
           About
         </Typography>
       </Link>
+      <Link to="/new">
+        <Typography noWrap display="inline">
+          <InfoTwoToneIcon style={iconStyle} />
+          Create New
+        </Typography>
+      </Link>
     </div>
   );
 };

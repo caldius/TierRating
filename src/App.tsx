@@ -9,6 +9,7 @@ import PageList from "./page-list/PageList";
 import Header from "./Header";
 // import Create from "./create/Create";
 import Pages from "./pages/Pages";
+import New from "./new/New";
 
 const App: FC = () => (
   <BrowserRouter>
@@ -16,6 +17,7 @@ const App: FC = () => (
     <Routes>
       <Route path="/" element={<Home />} />
       <Route path="/about" element={<About />} />
+      <Route path="/new" element={<New />} />
       <Route path="/list" element={<PageList />} />
       {/* <Route path="/create" element={<Create />} /> */}
       <Route path="/pages/:pageId" element={<Pages />} />

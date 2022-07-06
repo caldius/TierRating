@@ -1,15 +1,24 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import React, { FC, useEffect, useState } from "react";
+import React, { FC, Fragment, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import "../App.css";
 import axios, { AxiosError, AxiosResponse } from "axios";
-import { Chip } from "@material-ui/core";
+import { Chip, InputLabel } from "@material-ui/core";
+import List from "@mui/material/List";
+import ListItem from "@mui/material/ListItem";
+import ListItemText from "@mui/material/ListItemText";
+import ArticleTwoToneIcon from "@mui/icons-material/ArticleTwoTone";
+import { Divider } from "@mui/material";
+import Select, { SelectChangeEvent } from "@mui/material/Select";
+import FormControl from "@mui/material/FormControl";
+import MenuItem from "@mui/material/MenuItem";
+
 import { getKey } from "../Utils/Utils";
-// import image from "../testimg.png"; // ここでパス指定して変数として利用する
 
 type jsonPost = {
   page_id: number;
   page_name: string;
+  page_description: string;
   create_date: string;
   tag_name: string[];
   isDisp?: boolean;
@@ -54,55 +63,83 @@ const PageList: FC = () => {
   /** コンボボックス変更時のイベント
    *  選択したタグを含んでいる行はisDisp=True それ以外はFalse
    */
-  const onChangeTagCombo = (selectValue: string) => {
+  const handleChangeTagCombo = (event: SelectChangeEvent) => {
     setJsonLists(
       jsonLists.map((x) =>
-        x.tag_name?.includes(selectValue) || selectValue === "" ? { ...x, isDisp: true } : { ...x, isDisp: false }
+        x.tag_name?.includes(event.target.value) || event.target.value === ""
+          ? { ...x, isDisp: true }
+          : { ...x, isDisp: false }
       )
     );
   };
+
+  const iconStyle: React.CSSProperties = { verticalAlign: "middle", display: "inline-flex" };
 
   return (
     <>
       <h1>This is ListPage</h1>
 
-      <select name="tags" onChange={(e) => onChangeTagCombo(e.target.value)}>
+      {/* TODOけす */}
+      {/* <select name="tags" onChange={(e) => onChangeTagCombo(e.target.value)}>
         <option> </option>
-        {/* {tagNameList.map((x) => (
-          <option>{x}</option>
-        ))} */}
         {jsonTagName.map((x) => (
           <option key={x.tag_name}>{x.tag_name}</option>
         ))}
-      </select>
+      </select> */}
 
-      <ol>
+      <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
+        {/* TODO↓このへんいろいろなおす */}
+        <InputLabel id="tag-combobox-label">Filter</InputLabel>
+        <Select
+          labelId="tag-combobox-label"
+          id="tag-combobox"
+          label="TESTTESTTEST"
+          onChange={handleChangeTagCombo}
+          defaultValue=""
+        >
+          <MenuItem value="">_</MenuItem>
+          {jsonTagName.map((x) => (
+            <MenuItem key={x.tag_name} value={x.tag_name}>
+              {x.tag_name}
+            </MenuItem>
+          ))}
+        </Select>
+      </FormControl>
+
+      <List>
         {/* isDispがFalseのものは表示しない ※初期値はundefinedは許可 */}
         {jsonLists
           .filter((x) => x.isDisp !== false)
           .map((row) => (
-            <li key={row.page_id}>
-              <Link to={`/pages/${row.page_id}`}>{row.page_name} </Link>
-              {row.tag_name?.map((x) => (
-                <Chip color="primary" size="small" style={{ fontSize: "0.2em" }} key={x} label={x} variant="outlined" />
-              ))}
-            </li>
+            <Fragment key={row.page_id}>
+              <ListItem disablePadding>
+                <ListItemText
+                  primary={
+                    <>
+                      <Link to={`/pages/${row.page_id}`}>
+                        <ArticleTwoToneIcon style={iconStyle} />
+                        {row.page_name}
+                      </Link>
+                      {row.tag_name?.map((x) => (
+                        <Chip
+                          color="primary"
+                          size="small"
+                          style={{ fontSize: "0.2em" }}
+                          key={x}
+                          label={x}
+                          variant="outlined"
+                        />
+                      ))}
+                    </>
+                  }
+                  // ↓page_descriptionを受け取って表示するように変更する
+                  secondary={row.page_description}
+                />
+              </ListItem>
+              <Divider />
+            </Fragment>
           ))}
-      </ol>
-
-      <p>
-        {/* isDispがFalseのものは表示しない ※初期値はundefinedは許可 */}
-        {jsonLists
-          .filter((x) => x.isDisp !== false)
-          .map((row) => (
-            <li key={row.page_id}>
-              <Link to={`/pages/${row.page_id}`}>{row.page_name} </Link>
-              {row.tag_name?.map((x) => (
-                <Chip color="primary" size="small" style={{ fontSize: "0.2em" }} key={x} label={x} variant="outlined" />
-              ))}
-            </li>
-          ))}
-      </p>
+      </List>
     </>
   );
 };
