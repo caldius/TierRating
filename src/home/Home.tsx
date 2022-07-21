@@ -14,6 +14,9 @@ const Home: FC = () => (
     </Link>
     <Link to="/about">
       <h1>[About]</h1>
+    </Link>{" "}
+    <Link to="/new">
+      <h1>[Create New]</h1>
     </Link>
   </>
 );

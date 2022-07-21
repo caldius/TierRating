@@ -106,11 +106,7 @@ const Rating: React.FC<Props> = (props) => {
             // 第一引数に自身のID,第２引数に相手のID
             onClick={() => onClickButton(row.item_id, row.opposite_id)}
           >
-            <img
-              src={`https://www.tierrating.com/create${row.item_image_path.slice(1)}`}
-              alt={`${row.item_name}`}
-              width={60}
-            />
+            <img src={`${row.item_image_path}`} alt={`${row.item_name}`} width={60} />
           </button>
         ))}
     </div>

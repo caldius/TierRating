@@ -12,8 +12,9 @@ const Header: FC = () => {
   const iconStyle: React.CSSProperties = { verticalAlign: "middle", display: "inline-flex" };
 
   return (
-    <div style={{ border: "dotted 5Px lime" }}>
-      <h1>TierRating.com</h1>
+    <div style={{ backgroundColor: "#9F9" }}>
+      <h1 style={{ margin: "0" }}>TierRating.com</h1>
+      <br />
       {/* TODO:styleごちゃごちゃ書くかリンクアイテムみたいなものを設定して並べたいかなあ？ */}
       <Link to="/">
         <Typography noWrap display="inline">
@@ -35,6 +36,7 @@ const Header: FC = () => {
       </Link>
       <Link to="/new">
         <Typography noWrap display="inline">
+          {/* TODOアイコン画像を新規作成っぽいものに変える */}
           <InfoTwoToneIcon style={iconStyle} />
           Create New
         </Typography>

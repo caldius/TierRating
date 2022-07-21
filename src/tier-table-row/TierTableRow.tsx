@@ -28,7 +28,7 @@ export const TierTableRow = (props: TierTableRowProps) => {
           <div style={{ display: "inline-block", textAlign: "center" }} key={row.item_id}>
             <img
               // key={row.item_id}
-              src={`https://www.tierrating.com/create${row.item_image_path.slice(1)}`}
+              src={`${row.item_image_path}`}
               alt={`${row.item_name}`}
               title={`${row.item_name} / ${row.item_rate}`}
               width={60}

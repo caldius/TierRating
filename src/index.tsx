@@ -4,9 +4,16 @@ import "./index.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 
+// 本番環境ではコンソールログを書き換える
+if (process.env.NODE_ENV !== "development") {
+  console.log = () => {
+    ("");
+  };
+}
+
 ReactDOM.render(
   <React.StrictMode>
-    <App />{" "}
+    <App />
   </React.StrictMode>,
   document.getElementById("root")
 );
