@@ -7,6 +7,7 @@ import HomeTwoToneIcon from "@mui/icons-material/HomeTwoTone";
 import { MenuBookTwoTone } from "@mui/icons-material";
 // import image from "./testimg.png"; // ここでパス指定して変数として利用する
 import InfoTwoToneIcon from "@mui/icons-material/InfoTwoTone";
+import CreateTwoToneIcon from "@mui/icons-material/CreateTwoTone";
 
 const Header: FC = () => {
   const iconStyle: React.CSSProperties = { verticalAlign: "middle", display: "inline-flex" };
@@ -16,29 +17,29 @@ const Header: FC = () => {
       <h1 style={{ margin: "0" }}>TierRating.com</h1>
       <br />
       {/* TODO:styleごちゃごちゃ書くかリンクアイテムみたいなものを設定して並べたいかなあ？ */}
-      <Link to="/">
+      <Link to="/" style={{ paddingLeft: "1%" }}>
         <Typography noWrap display="inline">
           <HomeTwoToneIcon style={iconStyle} />
           Home
         </Typography>
       </Link>
-      <Link to="/list">
+      <Link to="/list" style={{ paddingLeft: "1%" }}>
         <Typography noWrap display="inline">
           <MenuBookTwoTone style={iconStyle} />
           List
         </Typography>
       </Link>
-      <Link to="/about">
+      <Link to="/new" style={{ paddingLeft: "1%" }}>
+        <Typography noWrap display="inline">
+          {/* TODOアイコン画像を新規作成っぽいものに変える */}
+          <CreateTwoToneIcon style={iconStyle} />
+          Create New
+        </Typography>
+      </Link>
+      <Link to="/about" style={{ float: "right", paddingRight: "1%" }}>
         <Typography noWrap display="inline">
           <InfoTwoToneIcon style={iconStyle} />
           About
-        </Typography>
-      </Link>
-      <Link to="/new">
-        <Typography noWrap display="inline">
-          {/* TODOアイコン画像を新規作成っぽいものに変える */}
-          <InfoTwoToneIcon style={iconStyle} />
-          Create New
         </Typography>
       </Link>
     </div>

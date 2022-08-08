@@ -15,10 +15,7 @@ import FormControlLabel from "@mui/material/FormControlLabel";
 import Radio from "@mui/material/Radio";
 import { Paper } from "@material-ui/core";
 import Typography from "@mui/material/Typography";
-// import Tooltip from "@mui/material/Tooltip";
-// import { height } from "@mui/system";
-// import history from "history/createBrowserHistory";
-// import { useNavigate } from "react-router-dom";
+import { split } from "../Utils/Utils";
 
 export type Props = {
   // ...
@@ -31,11 +28,10 @@ export type NewResponceType = {
 
 const New: React.FC<Props> = (_props) => {
   const [isSending, setIsSending] = useState(false);
-  const [pageTitleText, setPageTitleText] = useState<string>(""); /// ////////////1
-  const [pageDescriptionText, setPageDescriptionText] = useState<string>(""); /// ////////////1
-  // const [tagListText, setTagListText] = useState<string>(""); /// ////////////1
+  const [pageTitleText, setPageTitleText] = useState<string>("");
+  const [pageDescriptionText, setPageDescriptionText] = useState<string>("");
   const [tagNames, setTagNames] = useState<string[]>(["", "", "", "", "", "", "", "", "", ""]);
-  const [whichIsText, setWhichIsText] = useState<string>(""); /// ////////////1
+  const [whichIsText, setWhichIsText] = useState<string>("");
   const [images, setImages] = useState<File[]>([]);
   const [imageTitles, setImageTitles] = useState<string[]>([]);
   const inputId = Math.random().toString(32).substring(2);
@@ -44,16 +40,6 @@ const New: React.FC<Props> = (_props) => {
   const isJA = language === "ja";
   const isEN = language === "en";
 
-  // const [createdPageId, setCreatedPageId] = useState(0);
-
-  // const handleLanguageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-  //   setLanguage((event.target as HTMLInputElement).value);
-  // };
-
-  // if (createdPageId > 0) {
-  //   const navigate = useNavigate();
-  //   navigate(`/pages/${createdPageId}`);
-  // }
   /**
    * 投稿ボタン押下時の処理
    * // TODO色々ちゃんと書く
@@ -76,7 +62,6 @@ const New: React.FC<Props> = (_props) => {
     // DATAに対して各情報を付け足す
     data.append("pageTitle", target.pageTitle?.value || "");
     data.append("pageDescription", target.pageDescription?.value || "");
-    // data.append("tagList", target.tagList?.value || "");
     data.append("whichIs", target.whichIs?.value || "");
     data.append("language", target.language?.value || "");
 
@@ -102,6 +87,43 @@ const New: React.FC<Props> = (_props) => {
     // if postedComment.data.
 
     if ((postedComment?.data?.page_id ?? 0) > 0) {
+      // 画像の個数制限にかからないように20件ずつに画像保存処理を分割する
+
+      const pageId = `${postedComment?.data?.page_id}`;
+
+      const splittedImages = split(images, 20);
+      const splittedImageTitles = split(imageTitles, 20);
+
+      for (let i = 0; i < splittedImages.length; i += 1) {
+        const uploadData = new FormData();
+
+        uploadData.append("id", pageId);
+        uploadData.append("create_count", `${i}`);
+
+        splittedImages[i].forEach((image) => uploadData.append("images[]", image));
+        splittedImageTitles[i].forEach((imageTitle) => uploadData.append("imageTitle[]", imageTitle));
+
+        // 中身の確認
+        console.log(...uploadData.entries());
+
+        // eslint-disable-next-line no-await-in-loop
+        const uploadResult = await axios.post<NewResponceType>(
+          "https://www.tierrating.com/api/uploadfiles/",
+          uploadData
+        );
+
+        console.log(uploadResult);
+      }
+
+      // const uploadData = new FormData();
+
+      // images.forEach((image) => {
+      //   uploadData.append("images[]", image);
+      // });
+      // imageTitles.forEach((imageTitle) => {
+      //   uploadData.append("imageTitle[]", imageTitle);
+      // });
+
       // 登録処理に成功してるっぽかったら画面遷移、直接でええやろ(適当)
       window.location.href = `https://www.tierrating.com/pages/${postedComment?.data?.page_id}`;
     }
@@ -116,8 +138,10 @@ const New: React.FC<Props> = (_props) => {
     if (!e.target.files) return;
     setImages([...images, ...e.target.files]);
 
-    // TODOテキストリスト追加 要動作確認・・・
-    setImageTitles(imageTitles.concat(Array(e.target.files.length).fill("")));
+    // TODOテキストリスト追加
+    // 拡張子を除外したファイル名をデフォルト設定しておく 要動作確認・・・
+    // setImageTitles(imageTitles.concat(Array(e.target.files.length).fill("")));
+    setImageTitles(imageTitles.concat(Array.from(e.target.files).map((x) => x.name.split(".")[0])));
   };
 
   /**
@@ -126,28 +150,24 @@ const New: React.FC<Props> = (_props) => {
    * @param index 押下した削除ボタンの位置
    */
   const handleOnRemoveImage = (index: number) => {
-    // 選択した画像は削除可能
+    // 選択した画像を削除
     const newImages = [...images];
     newImages.splice(index, 1);
     setImages(newImages);
 
-    // TODO↑を参考にテキストリスト削除処理追加
-    //      したものがこれ、要動作確認
+    // テキストも削除
     const newImageTitles = [...imageTitles];
     newImageTitles.splice(index, 1);
     setImageTitles(newImageTitles);
   };
 
   return (
-    // <Paper style={{ width: "90%", marginTop: "20px", marginBottom: "20px" }}>
     <Paper elevation={3} style={{ margin: "4%", padding: "2%" }}>
       <form action="" onSubmit={(e) => handleOnSubmit(e)}>
-        {/* <FormLabel id="demo-controlled-radio-buttons-group"></FormLabel> */}
         <RadioGroup
           aria-labelledby="demo-controlled-radio-buttons-group"
           name="language"
           value={language}
-          // onChange={handleLanguageChange}
           onChange={(e) => setLanguage(e.target.value)}
         >
           <div style={{ display: "flex" }}>
@@ -191,7 +211,7 @@ const New: React.FC<Props> = (_props) => {
               isEN
                 ? "ex. 'Favorite ranking of the first three Pokémon in all series'"
                 : isJA
-                ? "例:「ポケモン全シリーズの最初の3匹の人気ランキング」"
+                ? "例:「ポケモン御三家人気ランキング」"
                 : "謎言語"
             }
             size="small"
@@ -215,7 +235,7 @@ const New: React.FC<Props> = (_props) => {
             label={isEN ? "Judging Criteria" : isJA ? "判断基準" : "謎言語"}
             helperText={
               isEN
-                ? "ex.'stronger', 'interesting', 'your favorite'"
+                ? "ex.'stronger', 'more interesting', 'your favorite'"
                 : isJA
                 ? "例:「強い」「リセマラ適正が高い」「好き」"
                 : "謎言語"

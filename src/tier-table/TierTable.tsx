@@ -3,10 +3,6 @@ import "../App.css";
 import { TierTableRow } from "../tier-table-row/TierTableRow";
 
 export type TierTableProps = {
-  // item_id: number;
-  // item_name: string;
-  // item_rate: number;
-  // item_image_path: string;
   tierItemList: tierItem[];
 };
 
@@ -19,11 +15,6 @@ export type tierItem = {
 
 export const TierTable = (props: TierTableProps) => {
   const [isDispItemInfo, setIsDispItemInfo] = useState(false);
-
-  // const handleChangeIsDispItemInfo = (e: React.ChangeEvent<HTMLInputElement >) => {
-  //   console.log(e);
-  //   setIsDispItemInfo(e.target.);
-  // };
 
   const { tierItemList } = props;
 

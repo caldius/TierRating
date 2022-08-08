@@ -33,7 +33,6 @@ const PageList: FC = () => {
 
   useEffect(() => {
     axios
-      // .get<jsonPost[]>("https://jsonplaceholder.typicode.com/posts")
       .get<jsonPost[]>(`https://www.tierrating.com/api/pagelist/?key=${getKey(8)}`)
       .then((res) => {
         // NOTE 検証用
@@ -41,7 +40,6 @@ const PageList: FC = () => {
 
         setJsonLists(res.data);
       })
-      // .catch((e: AxiosError<IErrorResponse>) => console.error("err"));
       .catch(() => console.error("err"));
   }, []);
 
@@ -77,16 +75,6 @@ const PageList: FC = () => {
 
   return (
     <>
-      <h1>This is ListPage</h1>
-
-      {/* TODOけす */}
-      {/* <select name="tags" onChange={(e) => onChangeTagCombo(e.target.value)}>
-        <option> </option>
-        {jsonTagName.map((x) => (
-          <option key={x.tag_name}>{x.tag_name}</option>
-        ))}
-      </select> */}
-
       <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
         {/* TODO↓このへんいろいろなおす */}
         <InputLabel id="tag-combobox-label">Filter</InputLabel>
@@ -107,7 +95,7 @@ const PageList: FC = () => {
       </FormControl>
 
       <List>
-        {/* isDispがFalseのものは表示しない ※初期値はundefinedは許可 */}
+        {/* isDispがFalseのものは表示しない ※初期値のundefinedは許可 */}
         {jsonLists
           .filter((x) => x.isDisp !== false)
           .map((row) => (

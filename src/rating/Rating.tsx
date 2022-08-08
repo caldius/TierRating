@@ -42,6 +42,9 @@ type Props = {
 const Rating: React.FC<Props> = (props) => {
   const { pageId, setUpdateCount, IncrementupdateCount, language, whichIs } = props;
 
+  const isEN = language === "en";
+  const isJA = language === "ja";
+
   // NOTE
 
   const navigate = useNavigate();
@@ -68,12 +71,15 @@ const Rating: React.FC<Props> = (props) => {
   const onClickButton = (itemId: string, oppositeId: string) => {
     // 第1引数を自身のid,第2引数を相手のidとしてAPIを叩くつもり
 
-    console.log(itemId, oppositeId); // NOTE 検証
+    console.log(itemId, oppositeId, pageId); // NOTE 検証
 
     axios
       .get<CalcResult[]>(
-        `https://www.tierrating.com/api/calculating/?id=${itemId}&opposite=${oppositeId}&key=${getKey(8)}`
+        `https://www.tierrating.com/api/calculating/?id=${itemId}&opposite=${oppositeId}&page_id=${pageId}&key=${getKey(
+          8
+        )}`
       )
+
       .then((res) => {
         // NOTE 検証用
         console.log(res.data);
@@ -90,13 +96,7 @@ const Rating: React.FC<Props> = (props) => {
 
   return (
     <div style={{ border: "dotted 5Px pink" }}>
-      <h1>
-        {language === "ja"
-          ? `どっちが${whichIs} ？`
-          : language === "en"
-          ? `Which is ${whichIs} ?`
-          : "unknown Langage is Selected"}
-      </h1>
+      <h1>{isJA ? `どっちが${whichIs} ？` : isEN ? `Which is ${whichIs} ?` : "unknown Langage is Selected"}</h1>
       {jsonComments
         .filter((_, index) => index <= 1)
         .map((row) => (
