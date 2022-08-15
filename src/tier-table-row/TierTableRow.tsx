@@ -10,19 +10,14 @@ export type TierTableRowProps = {
   isDispItemInfo: boolean;
 };
 
-export type tierItem = {
-  item_id: number;
-  item_name: string;
-  item_rate: number;
-  item_image_path: string;
-};
+export type tierItem = { item_id: number; item_name: string; item_rate: number; item_image_path: string };
 
 export const TierTableRow = (props: TierTableRowProps) => {
   const { tierItemList, colorCode, headerTitle, isDispItemInfo } = props;
 
   return (
     <>
-      <th style={{ backgroundColor: colorCode }}>{headerTitle}</th>
+      <th style={{ backgroundColor: colorCode, whiteSpace: "nowrap" }}>{headerTitle}</th>
       <td>
         {tierItemList.map((row) => (
           <div style={{ display: "inline-block", textAlign: "center" }} key={row.item_id}>

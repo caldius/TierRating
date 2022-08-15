@@ -35,7 +35,7 @@ export const TierTable = (props: TierTableProps) => {
             <TierTableRow
               tierItemList={tierItemList.filter((row) => row.item_rate >= 2000)}
               colorCode="#ff7f7f"
-              headerTitle="2000 - "
+              headerTitle="2000 -"
               isDispItemInfo={isDispItemInfo}
             />
           </tr>
@@ -43,7 +43,7 @@ export const TierTable = (props: TierTableProps) => {
             <TierTableRow
               tierItemList={tierItemList.filter((row) => row.item_rate < 2000 && row.item_rate >= 1800)}
               colorCode="#ffbf7f"
-              headerTitle="1800 - "
+              headerTitle="1800 -"
               isDispItemInfo={isDispItemInfo}
             />
           </tr>
@@ -51,7 +51,7 @@ export const TierTable = (props: TierTableProps) => {
             <TierTableRow
               tierItemList={tierItemList.filter((row) => row.item_rate < 1800 && row.item_rate >= 1600)}
               colorCode="#ffff7f"
-              headerTitle="1600 - "
+              headerTitle="1600 -"
               isDispItemInfo={isDispItemInfo}
             />
           </tr>
@@ -59,7 +59,7 @@ export const TierTable = (props: TierTableProps) => {
             <TierTableRow
               tierItemList={tierItemList.filter((row) => row.item_rate < 1600 && row.item_rate >= 1400)}
               colorCode="#bfff7f"
-              headerTitle="1400 - "
+              headerTitle="1400 -"
               isDispItemInfo={isDispItemInfo}
             />
           </tr>
@@ -67,7 +67,7 @@ export const TierTable = (props: TierTableProps) => {
             <TierTableRow
               tierItemList={tierItemList.filter((row) => row.item_rate < 1400 && row.item_rate >= 1200)}
               colorCode="#7fff7f"
-              headerTitle="1200 - "
+              headerTitle="1200 -"
               isDispItemInfo={isDispItemInfo}
             />
           </tr>
@@ -75,7 +75,7 @@ export const TierTable = (props: TierTableProps) => {
             <TierTableRow
               tierItemList={tierItemList.filter((row) => row.item_rate < 1200 && row.item_rate >= 1000)}
               colorCode="#7fffff"
-              headerTitle="1000 - "
+              headerTitle="1000 -"
               isDispItemInfo={isDispItemInfo}
             />
           </tr>
@@ -83,7 +83,7 @@ export const TierTable = (props: TierTableProps) => {
             <TierTableRow
               tierItemList={tierItemList.filter((row) => row.item_rate < 1000)}
               colorCode="#7fbfff"
-              headerTitle=" - 999"
+              headerTitle="- 999"
               isDispItemInfo={isDispItemInfo}
             />
           </tr>

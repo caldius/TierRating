@@ -112,7 +112,7 @@ const PageList: FC = () => {
                         <Chip
                           color="primary"
                           size="small"
-                          style={{ fontSize: "0.2em" }}
+                          style={{ fontSize: "0.8em" }}
                           key={x}
                           label={x}
                           variant="outlined"

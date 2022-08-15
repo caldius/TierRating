@@ -3,19 +3,13 @@ import React, { FC, Fragment, useEffect, useState, VFC } from "react";
 import { Link, useParams } from "react-router-dom";
 import axios, { AxiosError, AxiosResponse } from "axios";
 import "../App.css";
-import image from "../testimg.png"; // ここでパス指定して変数として利用する
 import Rating from "../rating/Rating";
 import { getKey } from "../Utils/Utils";
 
 import { TierTable } from "../tier-table/TierTable";
 // import { color } from "@mui/system";
 
-export type itemInfoType = {
-  item_id: number;
-  item_name: string;
-  item_rate: number;
-  item_image_path: string;
-};
+export type itemInfoType = { item_id: number; item_name: string; item_rate: number; item_image_path: string };
 
 export type pageInfoType = {
   page_id: number;
@@ -43,16 +37,6 @@ const Pages: FC = () => {
     setUpdateCount((prev) => prev + 1);
   };
 
-  // const handleUpdateCount = setUpdateCount((prev) => prev + 1);
-
-  // const handleUpdateCount = React.useCallback(() => {
-  //   // const handleUpdateCount = React.useEffect(() => {
-  //   // console.log("登録コンテンツの変更イベント", value); // NOTE 検証用
-
-  //   console.log(updateCount);
-  //   setUpdateCount((prev) => prev + 1);
-  // }, [setUpdateCount]);
-
   useEffect(() => {
     axios
       .get<itemInfoType[]>(`https://www.tierrating.com/api/itemlist/?id=${pageId}&key=${getKey(8)}`)
@@ -78,8 +62,8 @@ const Pages: FC = () => {
   }, [pageId]);
 
   return (
-    <div style={{ border: "dotted 5Px cyan" }} key={updateCount}>
-      <h1>{pageInfo?.page_name}</h1>
+    <div key={updateCount}>
+      <h4>{pageInfo?.page_name}</h4>
       <p>{pageInfo?.page_description}</p>
 
       {/* NOTE setUpdateCountを渡す */}

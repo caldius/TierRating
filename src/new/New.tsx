@@ -1,4 +1,3 @@
-// import { Link } from "react-router-dom";
 import "../App.css";
 import React, { useState } from "react";
 import axios from "axios";
@@ -8,7 +7,6 @@ import CircularProgress from "@mui/material/CircularProgress";
 import IconButton from "@mui/material/IconButton";
 import CancelTwoToneIcon from "@mui/icons-material/CancelTwoTone";
 
-// import FormLabel from "@mui/material/FormLabel";
 import RadioGroup from "@mui/material/RadioGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
 
@@ -18,7 +16,7 @@ import Typography from "@mui/material/Typography";
 import { split } from "../Utils/Utils";
 
 export type Props = {
-  // ...
+  //
 };
 
 /** NEWコマンドの返り値 新しくできたpge_idを返す 帰ってこなきゃ失敗のはず */
@@ -52,7 +50,6 @@ const New: React.FC<Props> = (_props) => {
     const target = e.target as typeof e.target & {
       pageTitle: { value: string };
       pageDescription: { value: string };
-      // tagList: { value: string };
       whichIs: { value: string };
       language: { value: string };
     };
@@ -66,25 +63,16 @@ const New: React.FC<Props> = (_props) => {
     data.append("language", target.language?.value || "");
 
     // 画像、画像タイトルの配列
-    images.forEach((image) => {
-      data.append("images[]", image);
-    });
-    imageTitles.forEach((imageTitle) => {
-      data.append("imageTitle[]", imageTitle);
-    });
+    images.forEach((image) => data.append("images[]", image));
+    imageTitles.forEach((imageTitle) => data.append("imageTitle[]", imageTitle));
 
     // 登録タグも配列化して渡す
-    tagNames.forEach((tagName) => {
-      data.append("tagName[]", tagName);
-    });
-
+    tagNames.forEach((tagName) => data.append("tagName[]", tagName));
     // 中身の確認
     console.log(...data.entries());
 
     const postedComment = await axios.post<NewResponceType>("https://www.tierrating.com/api/new/", data);
-
     console.log(postedComment);
-    // if postedComment.data.
 
     if ((postedComment?.data?.page_id ?? 0) > 0) {
       // 画像の個数制限にかからないように20件ずつに画像保存処理を分割する
@@ -115,15 +103,6 @@ const New: React.FC<Props> = (_props) => {
         console.log(uploadResult);
       }
 
-      // const uploadData = new FormData();
-
-      // images.forEach((image) => {
-      //   uploadData.append("images[]", image);
-      // });
-      // imageTitles.forEach((imageTitle) => {
-      //   uploadData.append("imageTitle[]", imageTitle);
-      // });
-
       // 登録処理に成功してるっぽかったら画面遷移、直接でええやろ(適当)
       window.location.href = `https://www.tierrating.com/pages/${postedComment?.data?.page_id}`;
     }
@@ -138,9 +117,7 @@ const New: React.FC<Props> = (_props) => {
     if (!e.target.files) return;
     setImages([...images, ...e.target.files]);
 
-    // TODOテキストリスト追加
-    // 拡張子を除外したファイル名をデフォルト設定しておく 要動作確認・・・
-    // setImageTitles(imageTitles.concat(Array(e.target.files.length).fill("")));
+    // TODOテキストリスト追加 拡張子を除外したファイル名をデフォルト設定
     setImageTitles(imageTitles.concat(Array.from(e.target.files).map((x) => x.name.split(".")[0])));
   };
 
@@ -162,7 +139,7 @@ const New: React.FC<Props> = (_props) => {
   };
 
   return (
-    <Paper elevation={3} style={{ margin: "4%", padding: "2%" }}>
+    <Paper elevation={3} style={{ margin: "4%", padding: "2%", textAlign: "center" }}>
       <form action="" onSubmit={(e) => handleOnSubmit(e)}>
         <RadioGroup
           aria-labelledby="demo-controlled-radio-buttons-group"
@@ -175,20 +152,21 @@ const New: React.FC<Props> = (_props) => {
             <FormControlLabel value="en" control={<Radio />} label="English" />
           </div>
         </RadioGroup>
+        <Typography variant="h6" gutterBottom component="div" m={0} mt={1} fontStyle="">
+          {isEN ? "1. Input page info" : isJA ? "1. ページ情報入力" : "謎言語"}
+        </Typography>
         {/* -------- */}
         {/* タイトル */}
         {/* -------- */}
         <div>
-          <Typography variant="h5" gutterBottom component="div" m={0} mt={1} fontStyle="">
-            {isEN ? "1. title of tier list" : isJA ? "1. 作成するリストの名前" : "謎言語"}
-          </Typography>
           <TextField
             name="pageTitle"
             value={pageTitleText}
-            label={isEN ? "Title" : isJA ? "タイトル" : "謎言語"}
+            label={isEN ? "Page Title" : isJA ? "タイトル" : "謎言語"}
             helperText={
               isEN ? "ex. 'Favorite Pokémon Starter Tier List'" : isJA ? "例:「好きな御三家ポケモン」" : "謎言語"
             }
+            style={{ width: "12em" }}
             size="small"
             variant="standard"
             required
@@ -200,9 +178,6 @@ const New: React.FC<Props> = (_props) => {
         {/* 詳細     */}
         {/* -------- */}
         <div>
-          <Typography variant="h5" gutterBottom component="div" m={0} mt={1} fontStyle="">
-            {isEN ? "2. description of tier list " : isJA ? "2. リストの説明文" : "謎言語"}
-          </Typography>
           <TextField
             name="pageDescription"
             value={pageDescriptionText}
@@ -224,38 +199,27 @@ const New: React.FC<Props> = (_props) => {
         {/* -------- */}
         {/* 判断基準 */}
         {/* -------- */}
-        <Typography variant="h5" gutterBottom component="div" m={0} mt={1} fontStyle="">
-          {isEN ? `3.  judging criteria followed by "Which is..."` : isJA ? "3. 判断基準”" : "謎言語"}
-        </Typography>
-        <div style={{ display: "flex", flexWrap: "wrap" }}>
+        <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "center" }}>
           <p style={{ fontSize: "1.3em" }}>{isEN ? "Which Is..." : isJA ? "どっちが..." : "謎言語"}</p>
           <TextField
             name="whichIs"
             value={whichIsText}
+            style={{ width: "8em" }}
             label={isEN ? "Judging Criteria" : isJA ? "判断基準" : "謎言語"}
-            helperText={
-              isEN
-                ? "ex.'stronger', 'more interesting', 'your favorite'"
-                : isJA
-                ? "例:「強い」「リセマラ適正が高い」「好き」"
-                : "謎言語"
-            }
+            helperText={isEN ? "ex.'stronger', 'your favorite'" : isJA ? "例:「強い」「好き」" : "謎言語"}
             size="small"
             variant="standard"
             required
             disabled={isSending}
             onChange={(e) => setWhichIsText(e.target.value)}
           />
-          <p style={{ fontSize: "1.3em" }}>?</p>
+          <p style={{ fontSize: "1.4em" }}>?</p>
         </div>
         {/* -------- */}
         {/* タグ×10 */}
         {/* -------- */}
-        <Typography variant="h5" gutterBottom component="div" m={0} mt={1} fontStyle="">
-          {isEN ? "4. tags (free word, max 10)" : isJA ? "4. タグ（自由入力、10件まで）" : "謎言語"}
-        </Typography>
         {/* ↓↓ 「display:"flex",flexWrap:"wrap"」で折り返し有りの左並べになるっぽい ↓↓ */}
-        <div style={{ display: "flex", flexWrap: "wrap" }}>
+        <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "center" }}>
           {
             // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
             [...Array(10)].map((_, i) => (
@@ -263,10 +227,11 @@ const New: React.FC<Props> = (_props) => {
                 <TextField
                   name="tagName"
                   value={tagNames[i]}
-                  label={isEN ? `tag${i + 1}` : isJA ? `タグ${i + 1}` : "謎言語"}
+                  label={isEN ? `Tag${i + 1}` : isJA ? `タグ${i + 1}` : "謎言語"}
+                  helperText={i === 0 && isEN ? "free word, max 10" : i === 0 && isJA ? "自由入力、10件まで" : ""}
                   size="small"
                   variant="standard"
-                  style={{ paddingRight: "10px" }}
+                  style={{ paddingRight: "10px", width: "7em" }}
                   disabled={isSending}
                   // 配列を書き換えたものをset関数に投げる
                   onChange={(e) => {
@@ -278,12 +243,12 @@ const New: React.FC<Props> = (_props) => {
           }
         </div>
         <br />
-        {/* 1つのボタンで画像を選択する */}
+
         {/* -------------- */}
         {/* 画像選択ボタン */}
         {/* -------------- */}
-        <Typography variant="h5" gutterBottom component="div" m={0} mt={1} fontStyle="">
-          {isEN ? "5.Select set of images for the tier list" : isJA ? "5.アップロードする画像を選択 (複数)" : "謎言語"}
+        <Typography variant="h6" gutterBottom component="div" m={0} mt={1} fontStyle="">
+          {isEN ? "2. Select images and Input name" : isJA ? "2. 画像選択" : "謎言語"}
         </Typography>
         <label htmlFor={inputId}>
           <Button variant="contained" component="span">
@@ -302,9 +267,6 @@ const New: React.FC<Props> = (_props) => {
         {/* ------------ */}
         {/* 画像一覧↓↓ */}
         {/* ------------ */}
-        <Typography variant="h5" gutterBottom component="div" m={0} mt={1} fontStyle="">
-          {images.length > 0 && isEN ? "6.Input name each images" : images.length > 0 && isJA ? "6.各画像の名称" : ""}
-        </Typography>
         <div style={{ display: "flex", flexWrap: "wrap" }}>
           {/* 画像を選択したら選択中のすべての画像のプレビューを表示 */}
           {images.map((image, i) => (
@@ -325,7 +287,7 @@ const New: React.FC<Props> = (_props) => {
                 label="Image Title"
                 variant="standard"
                 size="small"
-                style={{ width: "100px" }}
+                style={{ width: "7em" }}
                 required
                 disabled={isSending}
                 // 配列を書き換えたものをset関数に投げる

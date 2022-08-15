@@ -2,8 +2,9 @@
 import React, { FC, useEffect, useState, VFC } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "../App.css";
-import axios, { AxiosError, AxiosResponse } from "axios";
-import image from "../testimg.png"; // ここでパス指定して変数として利用する
+import axios from "axios";
+import { Button } from "@mui/material";
+import { Paper } from "@material-ui/core";
 import { getKey } from "../Utils/Utils";
 
 type jsonComment = {
@@ -17,13 +18,7 @@ type jsonComment = {
   opposite_id: string;
 };
 
-type CalcResult = {
-  item_rate: string;
-};
-
-type IErrorResponse = {
-  message: string | undefined;
-};
+type CalcResult = { item_rate: string };
 
 type Props = {
   pageId: string;
@@ -47,7 +42,7 @@ const Rating: React.FC<Props> = (props) => {
 
   // NOTE
 
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
   const [jsonComments, setJsonComments] = useState<jsonComment[]>([]);
 
@@ -64,52 +59,60 @@ const Rating: React.FC<Props> = (props) => {
    * 第1引数が第2引数に勝利したと判断してAPIをキック（DB更新）
    * その後次の２件を取得して、ランダムに表示する。
    * ひとつ上のコンポーネントも逐次更新処理をかけてみたい
-   * @param email 第1引数のコメント
-   * @param name 第2引数のコメント
+   * @param itemId 勝ちアイテムのID
+   * @param oppositeId 負けアイテムのID
    */
   // eslint-disable-next-line camelcase
   const onClickButton = (itemId: string, oppositeId: string) => {
     // 第1引数を自身のid,第2引数を相手のidとしてAPIを叩くつもり
 
-    console.log(itemId, oppositeId, pageId); // NOTE 検証
+    if (itemId !== "" || oppositeId !== "") {
+      console.log(itemId, oppositeId, pageId); // NOTE 検証
 
-    axios
-      .get<CalcResult[]>(
-        `https://www.tierrating.com/api/calculating/?id=${itemId}&opposite=${oppositeId}&page_id=${pageId}&key=${getKey(
-          8
-        )}`
-      )
-
-      .then((res) => {
-        // NOTE 検証用
-        console.log(res.data);
-      })
-      .catch((e) =>
-        // エラー処理
-        console.error("err")
-      );
+      axios
+        .get<CalcResult[]>(
+          `https://www.tierrating.com/api/calculating/?id=${itemId}&opposite=${oppositeId}&page_id=${pageId}&key=${getKey(
+            8
+          )}`
+        )
+        .then((res) => console.log(res.data)) // 検証用
+        .catch((e) => console.error("err")); // エラー処理
+    }
 
     IncrementupdateCount?.();
-
-    // navigate(`/pages/${pageId}/`);
   };
 
   return (
-    <div style={{ border: "dotted 5Px pink" }}>
-      <h1>{isJA ? `どっちが${whichIs} ？` : isEN ? `Which is ${whichIs} ?` : "unknown Langage is Selected"}</h1>
+    <Paper elevation={3} style={{ margin: "4%", padding: "2%", textAlign: "center" }}>
+      <p>{isJA ? `どっちが${whichIs} ？` : isEN ? `Which is ${whichIs} ?` : "unknown Langage is Selected"}</p>
       {jsonComments
         .filter((_, index) => index <= 1)
         .map((row) => (
-          <button
+          <Button
+            variant="outlined"
             key={`${row.item_id}-${row.opposite_id}`}
             type="button"
             // 第一引数に自身のID,第２引数に相手のID
             onClick={() => onClickButton(row.item_id, row.opposite_id)}
           >
-            <img src={`${row.item_image_path}`} alt={`${row.item_name}`} width={60} />
-          </button>
+            <div style={{ display: "flex", flexDirection: "column" }}>
+              <img src={`${row.item_image_path}`} alt={`${row.item_name}`} width={100} />
+              <p>{row.item_name}</p>
+            </div>
+          </Button>
         ))}
-    </div>
+      <div>
+        <Button
+          size="small"
+          variant="outlined"
+          type="button"
+          onClick={() => onClickButton("", "")}
+          style={{ width: "200px" }}
+        >
+          <p>{isJA ? `パス` : isEN ? `パス` : "unknown Langage is Selected"}</p>
+        </Button>
+      </div>
+    </Paper>
   );
 };
 
