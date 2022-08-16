@@ -1,0 +1,24 @@
+// 平均
+const average = (scores: number[]) =>
+  scores.reduce((acc, current) => acc + current, 0) / scores.length;
+
+// 分散
+const variance = (scores: number[], avg: number) =>
+  scores.reduce((acc, current) => acc + Math.pow(current - avg, 2), 0) / scores.length;
+
+// 標準偏差
+const standardDeviation = (scores: number[], avg: number) => Math.sqrt(variance(scores, avg));
+
+// 偏差値
+const standardScore = (score: number, avg: number, sd: number) => ((score - avg) * 10) / sd + 50;
+
+  // スコア一覧
+  const scores = [10, 30, 50, 70, 80, 100, 0];
+
+  // 偏差値の表示
+  const avg = average(scores);
+  const sd = standardDeviation(scores, avg);
+
+  scores.forEach((score, i) =>
+    console.log(i + 1 + '番目の偏差値: ' + standardScore(score, avg, sd))
+  );
