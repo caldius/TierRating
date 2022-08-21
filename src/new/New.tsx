@@ -139,7 +139,7 @@ const New: React.FC<Props> = (_props) => {
   };
 
   return (
-    <Paper elevation={3} style={{ margin: "4%", padding: "2%", textAlign: "center" }}>
+    <Paper style={{ margin: "4%", padding: "2%", textAlign: "center" }}>
       <form action="" onSubmit={(e) => handleOnSubmit(e)}>
         <RadioGroup
           aria-labelledby="demo-controlled-radio-buttons-group"
@@ -152,13 +152,19 @@ const New: React.FC<Props> = (_props) => {
             <FormControlLabel value="en" control={<Radio />} label="English" />
           </div>
         </RadioGroup>
-        <Typography variant="h6" gutterBottom component="div" m={0} mt={1} fontStyle="">
+        <Typography variant="h5" gutterBottom component="div" m={0} mt={1} fontStyle="">
           {isEN ? "1. Input page info" : isJA ? "1. ページ情報入力" : "謎言語"}
         </Typography>
         {/* -------- */}
         {/* タイトル */}
         {/* -------- */}
-        <div>
+        <Paper
+          style={{
+            backgroundColor: "#efffef",
+            paddingBottom: "1%",
+            marginBottom: "1%",
+          }}
+        >
           <TextField
             name="pageTitle"
             value={pageTitleText}
@@ -173,11 +179,17 @@ const New: React.FC<Props> = (_props) => {
             disabled={isSending}
             onChange={(e) => setPageTitleText(e.target.value)}
           />
-        </div>
+        </Paper>
         {/* -------- */}
         {/* 詳細     */}
         {/* -------- */}
-        <div>
+        <Paper
+          style={{
+            backgroundColor: "#efffef",
+            paddingBottom: "1%",
+            marginBottom: "1%",
+          }}
+        >
           <TextField
             name="pageDescription"
             value={pageDescriptionText}
@@ -195,11 +207,20 @@ const New: React.FC<Props> = (_props) => {
             disabled={isSending}
             onChange={(e) => setPageDescriptionText(e.target.value)}
           />
-        </div>
+        </Paper>
         {/* -------- */}
         {/* 判断基準 */}
         {/* -------- */}
-        <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "center" }}>
+        <Paper
+          style={{
+            display: "flex",
+            flexWrap: "wrap",
+            justifyContent: "center",
+            backgroundColor: "#efffef",
+            paddingBottom: "1%",
+            marginBottom: "1%",
+          }}
+        >
           <p style={{ fontSize: "1.3em" }}>{isEN ? "Which Is..." : isJA ? "どっちが..." : "謎言語"}</p>
           <TextField
             name="whichIs"
@@ -214,12 +235,20 @@ const New: React.FC<Props> = (_props) => {
             onChange={(e) => setWhichIsText(e.target.value)}
           />
           <p style={{ fontSize: "1.4em" }}>?</p>
-        </div>
+        </Paper>
         {/* -------- */}
         {/* タグ×10 */}
         {/* -------- */}
         {/* ↓↓ 「display:"flex",flexWrap:"wrap"」で折り返し有りの左並べになるっぽい ↓↓ */}
-        <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "center" }}>
+        <Paper
+          style={{
+            display: "flex",
+            flexWrap: "wrap",
+            justifyContent: "center",
+            backgroundColor: "#efffef",
+            paddingBottom: "1%",
+          }}
+        >
           {
             // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
             [...Array(10)].map((_, i) => (
@@ -241,13 +270,12 @@ const New: React.FC<Props> = (_props) => {
               </div>
             ))
           }
-        </div>
+        </Paper>
         <br />
-
         {/* -------------- */}
         {/* 画像選択ボタン */}
         {/* -------------- */}
-        <Typography variant="h6" gutterBottom component="div" m={0} mt={1} fontStyle="">
+        <Typography variant="h5" gutterBottom component="div" m={0} mt={1} fontStyle="">
           {isEN ? "2. Select images and Input name" : isJA ? "2. 画像選択" : "謎言語"}
         </Typography>
         <label htmlFor={inputId}>
@@ -267,7 +295,15 @@ const New: React.FC<Props> = (_props) => {
         {/* ------------ */}
         {/* 画像一覧↓↓ */}
         {/* ------------ */}
-        <div style={{ display: "flex", flexWrap: "wrap" }}>
+        <Paper
+          style={{
+            display: "flex",
+            flexWrap: "wrap",
+            justifyContent: "center",
+            backgroundColor: "#efffef",
+            paddingBottom: "1%",
+          }}
+        >
           {/* 画像を選択したら選択中のすべての画像のプレビューを表示 */}
           {images.map((image, i) => (
             <div key={`${image.name}${i * 1}`} style={{ position: "relative" }}>
@@ -297,7 +333,7 @@ const New: React.FC<Props> = (_props) => {
               />
             </div>
           ))}
-        </div>
+        </Paper>
         <br />
         {isSending ? (
           <CircularProgress />

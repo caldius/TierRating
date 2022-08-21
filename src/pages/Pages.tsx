@@ -4,12 +4,18 @@ import { Link, useParams } from "react-router-dom";
 import axios, { AxiosError, AxiosResponse } from "axios";
 import "../App.css";
 import Rating from "../rating/Rating";
-import { getKey } from "../Utils/Utils";
+import { average, getKey, standardScore, stdDev } from "../Utils/Utils";
 
 import { TierTable } from "../tier-table/TierTable";
 // import { color } from "@mui/system";
 
-export type itemInfoType = { item_id: number; item_name: string; item_rate: number; item_image_path: string };
+export type itemInfoType = {
+  item_id: number;
+  item_name: string;
+  item_rate: number;
+  item_hensachi: number;
+  item_image_path: string;
+};
 
 export type pageInfoType = {
   page_id: number;
@@ -44,7 +50,18 @@ const Pages: FC = () => {
         // NOTE 検証用
         console.log(res.data);
 
-        setItemInfoList(res.data);
+        const rateArray: number[] = res.data.map((x) => x.item_rate);
+        const avg = average(rateArray);
+        const sd = stdDev(rateArray, avg);
+
+        const hensachiArray: number[] = rateArray.map((x) => standardScore(x, avg, sd));
+
+        const itemInfoWithHensachi: itemInfoType[] = res.data.map((x, i) => ({
+          ...x,
+          item_hensachi: hensachiArray[i],
+        }));
+
+        setItemInfoList(itemInfoWithHensachi);
       })
       .catch((e) => console.error("err"));
   }, [pageId, updateCount]);

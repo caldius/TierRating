@@ -3,7 +3,7 @@ import React, { FC, Fragment, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import "../App.css";
 import axios, { AxiosError, AxiosResponse } from "axios";
-import { Chip, InputLabel } from "@material-ui/core";
+import { Card, Chip, InputLabel, Paper, Typography } from "@material-ui/core";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemText from "@mui/material/ListItemText";
@@ -11,6 +11,7 @@ import ArticleTwoToneIcon from "@mui/icons-material/ArticleTwoTone";
 import { Divider } from "@mui/material";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
 import FormControl from "@mui/material/FormControl";
+import LocalOfferIcon from "@mui/icons-material/LocalOffer";
 import MenuItem from "@mui/material/MenuItem";
 
 import { getKey } from "../Utils/Utils";
@@ -24,12 +25,12 @@ type jsonPost = {
   isDisp?: boolean;
 };
 
-type IErrorResponse = {
-  message: string;
-};
+type IErrorResponse = { message: string };
 
 const PageList: FC = () => {
   const [jsonLists, setJsonLists] = useState<jsonPost[]>([]);
+
+  const [currentTag, setcurrentTag] = useState<string>("");
 
   useEffect(() => {
     axios
@@ -43,9 +44,7 @@ const PageList: FC = () => {
       .catch(() => console.error("err"));
   }, []);
 
-  type jsonTagName = {
-    tag_name: string;
-  };
+  type jsonTagName = { tag_name: string };
 
   const [jsonTagName, setJsonTagName] = useState<jsonTagName[]>([]);
 
@@ -58,18 +57,13 @@ const PageList: FC = () => {
       .catch((e) => console.error("err"));
   }, []);
 
-  /** コンボボックス変更時のイベント
-   *  選択したタグを含んでいる行はisDisp=True それ以外はFalse
-   */
-  const handleChangeTagCombo = (event: SelectChangeEvent) => {
+  useEffect(() => {
     setJsonLists(
       jsonLists.map((x) =>
-        x.tag_name?.includes(event.target.value) || event.target.value === ""
-          ? { ...x, isDisp: true }
-          : { ...x, isDisp: false }
+        x.tag_name?.includes(currentTag) || currentTag === "" ? { ...x, isDisp: true } : { ...x, isDisp: false }
       )
     );
-  };
+  }, [currentTag]);
 
   const iconStyle: React.CSSProperties = { verticalAlign: "middle", display: "inline-flex" };
 
@@ -82,8 +76,8 @@ const PageList: FC = () => {
           labelId="tag-combobox-label"
           id="tag-combobox"
           label="TESTTESTTEST"
-          onChange={handleChangeTagCombo}
-          defaultValue=""
+          onChange={(e) => setcurrentTag(e.target.value)}
+          value={currentTag}
         >
           <MenuItem value="">_</MenuItem>
           {jsonTagName.map((x) => (
@@ -103,28 +97,28 @@ const PageList: FC = () => {
               <ListItem disablePadding>
                 <ListItemText
                   primary={
-                    <>
+                    <div style={{ display: "flex" }}>
                       <Link to={`/pages/${row.page_id}`}>
                         <ArticleTwoToneIcon style={iconStyle} />
                         {row.page_name}
                       </Link>
+                      <LocalOfferIcon style={iconStyle} />
                       {row.tag_name?.map((x) => (
                         <Chip
-                          color="primary"
                           size="small"
                           style={{ fontSize: "0.8em" }}
                           key={x}
                           label={x}
                           variant="outlined"
+                          onClick={(_e) => setcurrentTag(x)}
                         />
                       ))}
-                    </>
+                    </div>
                   }
-                  // ↓page_descriptionを受け取って表示するように変更する
-                  secondary={row.page_description}
+                  secondary={`・${row.page_description}`}
                 />
               </ListItem>
-              <Divider />
+              <Divider variant="middle" />
             </Fragment>
           ))}
       </List>

@@ -2,9 +2,7 @@ import "../App.css";
 
 export type TierTableRowProps = {
   tierItemList: tierItem[];
-  /** カラーコード */
   colorCode: string;
-  /** 行ヘッダ文字列 */
   headerTitle: string;
 
   isDispItemInfo: boolean;
@@ -17,7 +15,7 @@ export const TierTableRow = (props: TierTableRowProps) => {
 
   return (
     <>
-      <th style={{ backgroundColor: colorCode, whiteSpace: "nowrap" }}>{headerTitle}</th>
+      <th style={{ backgroundColor: colorCode, whiteSpace: "nowrap", padding: "0.5em" }}>{headerTitle}</th>
       <td>
         {tierItemList.map((row) => (
           <div style={{ display: "inline-block", textAlign: "center" }} key={row.item_id}>

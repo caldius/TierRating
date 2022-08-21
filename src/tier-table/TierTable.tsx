@@ -10,6 +10,7 @@ export type tierItem = {
   item_id: number;
   item_name: string;
   item_rate: number;
+  item_hensachi: number;
   item_image_path: string;
 };
 
@@ -33,57 +34,57 @@ export const TierTable = (props: TierTableProps) => {
         <tbody style={{ backgroundColor: "dimgray" }}>
           <tr>
             <TierTableRow
-              tierItemList={tierItemList.filter((row) => row.item_rate >= 2000)}
+              tierItemList={tierItemList.filter((row) => row.item_hensachi >= 80)}
               colorCode="#ff7f7f"
-              headerTitle="2000 -"
+              headerTitle="S+"
               isDispItemInfo={isDispItemInfo}
             />
           </tr>
           <tr>
             <TierTableRow
-              tierItemList={tierItemList.filter((row) => row.item_rate < 2000 && row.item_rate >= 1800)}
+              tierItemList={tierItemList.filter((row) => row.item_hensachi < 80 && row.item_hensachi >= 70)}
               colorCode="#ffbf7f"
-              headerTitle="1800 -"
+              headerTitle="S"
               isDispItemInfo={isDispItemInfo}
             />
           </tr>
           <tr>
             <TierTableRow
-              tierItemList={tierItemList.filter((row) => row.item_rate < 1800 && row.item_rate >= 1600)}
+              tierItemList={tierItemList.filter((row) => row.item_hensachi < 70 && row.item_hensachi >= 60)}
               colorCode="#ffff7f"
-              headerTitle="1600 -"
+              headerTitle="A"
               isDispItemInfo={isDispItemInfo}
             />
           </tr>
           <tr>
             <TierTableRow
-              tierItemList={tierItemList.filter((row) => row.item_rate < 1600 && row.item_rate >= 1400)}
+              tierItemList={tierItemList.filter((row) => row.item_hensachi < 60 && row.item_hensachi >= 50)}
               colorCode="#bfff7f"
-              headerTitle="1400 -"
+              headerTitle="B"
               isDispItemInfo={isDispItemInfo}
             />
           </tr>
           <tr>
             <TierTableRow
-              tierItemList={tierItemList.filter((row) => row.item_rate < 1400 && row.item_rate >= 1200)}
+              tierItemList={tierItemList.filter((row) => row.item_hensachi < 50 && row.item_hensachi >= 40)}
               colorCode="#7fff7f"
-              headerTitle="1200 -"
+              headerTitle="C"
               isDispItemInfo={isDispItemInfo}
             />
           </tr>
           <tr>
             <TierTableRow
-              tierItemList={tierItemList.filter((row) => row.item_rate < 1200 && row.item_rate >= 1000)}
+              tierItemList={tierItemList.filter((row) => row.item_hensachi < 40 && row.item_hensachi >= 30)}
               colorCode="#7fffff"
-              headerTitle="1000 -"
+              headerTitle="D"
               isDispItemInfo={isDispItemInfo}
             />
           </tr>
           <tr>
             <TierTableRow
-              tierItemList={tierItemList.filter((row) => row.item_rate < 1000)}
+              tierItemList={tierItemList.filter((row) => row.item_hensachi < 30)}
               colorCode="#7fbfff"
-              headerTitle="- 999"
+              headerTitle="E"
               isDispItemInfo={isDispItemInfo}
             />
           </tr>
