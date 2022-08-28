@@ -4,9 +4,10 @@ import { Link, useParams } from "react-router-dom";
 import axios, { AxiosError, AxiosResponse } from "axios";
 import "../App.css";
 import Rating from "../rating/Rating";
-import { average, getKey, standardScore, stdDev } from "../Utils/Utils";
+import { average, getKey, l, standardScore, stdDev } from "../Utils/Utils";
 
 import { TierTable } from "../tier-table/TierTable";
+import { siteUrl } from "../Utils/Defines";
 // import { color } from "@mui/system";
 
 export type itemInfoType = {
@@ -25,9 +26,7 @@ export type pageInfoType = {
   language: string;
 };
 
-type IErrorResponse = {
-  message: string;
-};
+type IErrorResponse = { message: string };
 
 const Pages: FC = () => {
   const { pageId } = useParams();
@@ -38,17 +37,13 @@ const Pages: FC = () => {
   const [updateCount, setUpdateCount] = useState(0);
 
   /** 子コンポーネントに渡す変更イベント */
-  const IncrementupdateCount = () => {
-    console.log(updateCount);
-    setUpdateCount((prev) => prev + 1);
-  };
-
+  const IncrementupdateCount = () => setUpdateCount((prev) => prev + 1);
   useEffect(() => {
     axios
-      .get<itemInfoType[]>(`https://www.tierrating.com/api/itemlist/?id=${pageId}&key=${getKey(8)}`)
+      .get<itemInfoType[]>(`${siteUrl}/api/itemlist/?id=${pageId}&key=${getKey(8)}`)
       .then((res) => {
         // NOTE 検証用
-        console.log(res.data);
+        l(res.data);
 
         const rateArray: number[] = res.data.map((x) => x.item_rate);
         const avg = average(rateArray);
@@ -68,13 +63,8 @@ const Pages: FC = () => {
 
   useEffect(() => {
     axios
-      .get<pageInfoType>(`https://www.tierrating.com/api/pageinfo/?page_id=${pageId}&key=${getKey(8)}`)
-      .then((res) => {
-        // NOTE 検証用
-        console.log(res.data);
-
-        setPageInfo(res.data);
-      })
+      .get<pageInfoType>(`${siteUrl}/api/pageinfo/?page_id=${pageId}&key=${getKey(8)}`)
+      .then((res) => setPageInfo(res.data))
       .catch((e) => console.error("err"));
   }, [pageId]);
 

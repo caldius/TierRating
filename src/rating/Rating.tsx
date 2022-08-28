@@ -5,7 +5,8 @@ import "../App.css";
 import axios from "axios";
 import { Button } from "@mui/material";
 import { Paper } from "@material-ui/core";
-import { getKey } from "../Utils/Utils";
+import { getKey, l } from "../Utils/Utils";
+import { siteUrl } from "../Utils/Defines";
 
 type jsonComment = {
   name: string;
@@ -48,10 +49,8 @@ const Rating: React.FC<Props> = (props) => {
 
   useEffect(() => {
     axios
-      .get<jsonComment[]>(`https://www.tierrating.com/api/ratingitem/?id=${pageId}&key=${getKey(8)}`)
-      .then((res) => {
-        setJsonComments(res.data);
-      })
+      .get<jsonComment[]>(`${siteUrl}/api/ratingitem/?id=${pageId}&key=${getKey(8)}`)
+      .then((res) => setJsonComments(res.data))
       .catch((e) => console.error("err"));
   }, [pageId]);
 
@@ -67,15 +66,13 @@ const Rating: React.FC<Props> = (props) => {
     // 第1引数を自身のid,第2引数を相手のidとしてAPIを叩くつもり
 
     if (itemId !== "" || oppositeId !== "") {
-      console.log(itemId, oppositeId, pageId); // NOTE 検証
+      l(itemId, oppositeId, pageId); // NOTE 検証
 
       axios
         .get<CalcResult[]>(
-          `https://www.tierrating.com/api/calculating/?id=${itemId}&opposite=${oppositeId}&page_id=${pageId}&key=${getKey(
-            8
-          )}`
+          `${siteUrl}/api/calculating/?id=${itemId}&opposite=${oppositeId}&page_id=${pageId}&key=${getKey(8)}`
         )
-        .then((res) => console.log(res.data)) // 検証用
+        .then((res) => l(res.data)) // 検証用
         .catch((e) => console.error("err")); // エラー処理
     }
 

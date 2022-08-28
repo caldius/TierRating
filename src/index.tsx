@@ -6,9 +6,7 @@ import reportWebVitals from "./reportWebVitals";
 
 // 本番環境ではコンソールログを書き換える
 if (process.env.NODE_ENV !== "development") {
-  console.log = () => {
-    ("");
-  };
+  console.log = () => "";
 }
 
 ReactDOM.render(

@@ -14,7 +14,7 @@ const Header: FC = () => {
 
   return (
     <div style={{ backgroundColor: "#9F9" }}>
-      <h1 style={{ margin: "0" }}>TierRating.com</h1>
+      <h1 style={{ margin: "0" }}>AnyRating.com</h1>
       <br />
       {/* TODO:styleごちゃごちゃ書くかリンクアイテムみたいなものを設定して並べたいかなあ？ */}
       <Link to="/" style={{ paddingLeft: "1%" }}>

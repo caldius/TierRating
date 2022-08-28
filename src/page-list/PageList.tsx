@@ -15,6 +15,7 @@ import LocalOfferIcon from "@mui/icons-material/LocalOffer";
 import MenuItem from "@mui/material/MenuItem";
 
 import { getKey } from "../Utils/Utils";
+import { siteUrl } from "../Utils/Defines";
 
 type jsonPost = {
   page_id: number;
@@ -34,13 +35,8 @@ const PageList: FC = () => {
 
   useEffect(() => {
     axios
-      .get<jsonPost[]>(`https://www.tierrating.com/api/pagelist/?key=${getKey(8)}`)
-      .then((res) => {
-        // NOTE 検証用
-        console.log(res.data);
-
-        setJsonLists(res.data);
-      })
+      .get<jsonPost[]>(`${siteUrl}/api/pagelist/?key=${getKey(8)}`)
+      .then((res) => setJsonLists(res.data))
       .catch(() => console.error("err"));
   }, []);
 
@@ -50,10 +46,8 @@ const PageList: FC = () => {
 
   useEffect(() => {
     axios
-      .get<jsonTagName[]>(`https://www.tierrating.com/api/taglist/?key=${getKey(8)}`)
-      .then((res) => {
-        setJsonTagName(res.data);
-      })
+      .get<jsonTagName[]>(`${siteUrl}/api/taglist/?key=${getKey(8)}`)
+      .then((res) => setJsonTagName(res.data))
       .catch((e) => console.error("err"));
   }, []);
 

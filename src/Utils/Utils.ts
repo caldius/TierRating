@@ -1,6 +1,14 @@
-// どうでもいい関数 そのうち消す
-export const logMessage = (message: string): void => {
+/**
+ * console.logの短縮形
+ * 返り値trueを返すことで１行で&&で接続できるように、
+ * かつ関数名の省略
+ * @param message
+ * @returns
+ */
+export const l = (...message: unknown[]): boolean => {
   console.log(message);
+
+  return true;
 };
 
 /**
@@ -20,14 +28,6 @@ export const getKey = (wordCount: number): string => Math.random().toString(36).
  */
 export const split = <T>(array: T[], n: number): T[][] =>
   array.reduce((acc: T[][], c, i) => (i % n ? acc : [...acc, array.slice(i, i + n)]), []);
-
-// /**
-//  * 任意の桁で四捨五入する関数
-//  * @param  value 四捨五入する数値
-//  * @param  base どの桁で四捨五入するか（10→10の位、0.1→小数第１位）
-//  * @return  四捨五入した値
-//  */
-// export const orgRound = (value: number, base: number): number => Math.round(value * base) / base;
 
 /*
  * 丸め処理・小数点以下の桁数指定
@@ -63,21 +63,40 @@ export const calcRoundDp = (tgtNum: number, roundKbn: number, keta: number): num
 // ↓↓偏差値計算用
 // ------------------------------
 
-// 平均
+/**
+ * 平均
+ * @param scores
+ * @returns
+ */
 export const average = (scores: number[]) =>
   calcRoundDp(scores.reduce((acc, current) => acc + current, 0) / scores.length, 2, 2);
 
-// 分散
+/**
+ * 分散
+ * @param scores
+ * @param avg
+ * @returns
+ */
 export const variance = (scores: number[], avg: number) =>
   calcRoundDp(scores.reduce((acc, current) => acc + (current - avg) ** 2, 0) / scores.length, 2, 2);
 
-// 標準偏差
+/**
+ * 標準偏差
+ * @param scores
+ * @param avg
+ * @returns
+ */
 export const stdDev = (scores: number[], avg: number) => calcRoundDp(Math.sqrt(variance(scores, avg)), 2, 2);
 
-// 偏差値
+/**
+ * 偏差値
+ * @param score
+ * @param avg
+ * @param sd
+ * @returns
+ */
 export const standardScore = (score: number, avg: number, sd: number) =>
-  calcRoundDp(((score - avg) * 10) / sd + 50, 2, 2);
-
+  calcRoundDp(((score - avg) * 10) / sd + 50, 2, 2) || 50;
 // ↓使用例
 // スコア一覧
 // const scores: number[] = [10, 30, 50, 70, 80, 100, 0];
