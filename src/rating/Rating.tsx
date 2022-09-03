@@ -65,7 +65,7 @@ const Rating: React.FC<Props> = (props) => {
   const onClickButton = (itemId: string, oppositeId: string) => {
     // 第1引数を自身のid,第2引数を相手のidとしてAPIを叩くつもり
 
-    if (itemId !== "" || oppositeId !== "") {
+    if (itemId && oppositeId) {
       l(itemId, oppositeId, pageId); // NOTE 検証
 
       axios

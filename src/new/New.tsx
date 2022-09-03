@@ -15,6 +15,7 @@ import { Paper } from "@material-ui/core";
 import Typography from "@mui/material/Typography";
 import { l, split } from "../Utils/Utils";
 import { siteUrl } from "../Utils/Defines";
+// import { Visibility, VisibilityOff } from "@mui/icons-material";
 
 export type Props = {
   //
@@ -32,6 +33,7 @@ const New: React.FC<Props> = (_props) => {
   const [pageDescriptionText, setPageDescriptionText] = useState<string>("");
   const [tagNames, setTagNames] = useState<string[]>(["", "", "", "", "", "", "", "", "", ""]);
   const [whichIsText, setWhichIsText] = useState<string>("");
+  const [pwd, setPwd] = useState<string>("");
   const [images, setImages] = useState<File[]>([]);
   const [imageTitles, setImageTitles] = useState<string[]>([]);
   const inputId = Math.random().toString(32).substring(2);
@@ -56,6 +58,7 @@ const New: React.FC<Props> = (_props) => {
       pageDescription: { value: string };
       whichIs: { value: string };
       language: { value: string };
+      pwd: { value: string };
     };
 
     // -------------
@@ -70,6 +73,7 @@ const New: React.FC<Props> = (_props) => {
     data.append("pageDescription", target.pageDescription?.value || "");
     data.append("whichIs", target.whichIs?.value || "");
     data.append("language", target.language?.value || "");
+    data.append("password", target.pwd?.value || "");
 
     // 登録タグも配列化して渡す
     tagNames.forEach((tagName) => data.append("tagName[]", tagName));
@@ -92,26 +96,29 @@ const New: React.FC<Props> = (_props) => {
     // 登録処理２
     // -------------
 
-    // 画像の個数制限にかからないように20件ずつに画像保存処理を分割する
-
     const splittedImages = split(images, 20);
     const splittedImageTitles = split(imageTitles, 20);
 
-    // TODOこれasync-awaitでいいのかな・・・？
-    splittedImages.forEach((splittedImage, i) => {
+    // NOTE FORループにしないと複数登録が安定しないようなのでダサいが仕方なく。。。
+    for (let i = 0; i < splittedImages.length; i += 1) {
       const uploadData = new FormData();
 
       uploadData.append("id", pageId);
       uploadData.append("create_count", `${i}`);
 
-      splittedImage.forEach((image) => uploadData.append("images[]", image));
+      splittedImages[i].forEach((image) => uploadData.append("images[]", image));
       splittedImageTitles[i].forEach((imageTitle) => uploadData.append("imageTitle[]", imageTitle));
 
-      const uploadResult = axios.post<NewResponceType>(`${siteUrl}/api/uploadfiles/`, uploadData);
-      l(uploadResult);
-    });
+      // 中身の確認
+      console.log(...uploadData.entries());
+
+      // eslint-disable-next-line no-await-in-loop
+      const uploadResult = await axios.post<NewResponceType>("https://www.tierrating.com/api/uploadfiles/", uploadData);
+
+      console.log(uploadResult);
+    }
     // 登録処理に成功してるっぽかったら画面遷移、直接でええやろ(適当)
-    window.location.href = `${siteUrl}/pages/${postedComment?.data?.page_id}`;
+    window.location.href = `https://www.tierrating.com/pages/${postedComment?.data?.page_id}`;
 
     // 読み込み中終了
     setIsSending(false);
@@ -149,7 +156,6 @@ const New: React.FC<Props> = (_props) => {
     <Paper style={{ backgroundColor: "#efffef", margin: "4%", padding: "2%", textAlign: "center" }}>
       <form action="" onSubmit={(e) => handleOnSubmit(e)}>
         <RadioGroup
-          // aria-labelledby="demo-controlled-radio-buttons-group"
           name="language"
           value={language}
           // 型アサーションでLangageTypeに固定していることに注意
@@ -172,7 +178,7 @@ const New: React.FC<Props> = (_props) => {
               name="pageTitle"
               value={pageTitleText}
               label={isJA ? "タイトル" : "Page Title"}
-              helperText={isJA ? "例:「好きな御三家ポケモン」" : "ex. 'Favorite Pokémon Starter Tier List'"}
+              helperText={isJA ? "例:「〇〇強キャラランキング」" : "ex. 'Pokémon Strong Ranking Tier List'"}
               style={{ width: "20em" }}
               size="small"
               required
@@ -188,14 +194,10 @@ const New: React.FC<Props> = (_props) => {
               name="pageDescription"
               value={pageDescriptionText}
               label={isJA ? "詳細" : "Description"}
-              helperText={
-                isJA
-                  ? "例:「ポケモン御三家人気ランキング」"
-                  : "ex. 'Favorite ranking of the first three Pokémon in all series'"
-              }
+              helperText={isJA ? "タイトルを補足する説明文" : "description that complements the title"}
               style={{ width: "25em" }}
               size="small"
-              required
+              // required
               disabled={isSending}
               onChange={(e) => setPageDescriptionText(e.target.value)}
             />
@@ -240,6 +242,25 @@ const New: React.FC<Props> = (_props) => {
                 </div>
               ))
             }
+          </div>
+
+          {/* ---------- */}
+          {/* パスワード */}
+          {/* ---------- */}
+          <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "center", padding: "2%" }}>
+            <TextField
+              name="pwd"
+              value={pwd}
+              style={{ width: "15em" }}
+              label={isJA ? "パスワード" : "password"}
+              helperText={
+                isJA ? "登録後に編集する可能性がなければ不要" : "Unnecessary If not to edit after registration"
+              }
+              size="small"
+              disabled={isSending}
+              type="password"
+              onChange={(e) => setPwd(e.target.value)}
+            />
           </div>
         </Paper>
         <br />
