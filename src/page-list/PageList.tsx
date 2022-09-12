@@ -37,7 +37,7 @@ const PageList: FC = () => {
     axios
       .get<jsonPost[]>(`${siteUrl}/api/pagelist/?key=${getKey(8)}`)
       .then((res) => setJsonLists(res.data))
-      .catch(() => console.error("err"));
+      .catch((e) => console.error("err"));
   }, []);
 
   type jsonTagName = { tag_name: string };

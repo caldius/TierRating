@@ -5,7 +5,7 @@
  * @param message
  * @returns
  */
-export const l = (...message: unknown[]): boolean => {
+export const cLog = (...message: unknown[]): boolean => {
   console.log(message);
 
   return true;

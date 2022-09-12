@@ -5,7 +5,7 @@ import "../App.css";
 import axios from "axios";
 import { Button } from "@mui/material";
 import { Paper } from "@material-ui/core";
-import { getKey, l } from "../Utils/Utils";
+import { getKey, cLog } from "../Utils/Utils";
 import { siteUrl } from "../Utils/Defines";
 
 type jsonComment = {
@@ -66,13 +66,13 @@ const Rating: React.FC<Props> = (props) => {
     // 第1引数を自身のid,第2引数を相手のidとしてAPIを叩くつもり
 
     if (itemId && oppositeId) {
-      l(itemId, oppositeId, pageId); // NOTE 検証
+      cLog(itemId, oppositeId, pageId); // NOTE 検証
 
       axios
         .get<CalcResult[]>(
           `${siteUrl}/api/calculating/?id=${itemId}&opposite=${oppositeId}&page_id=${pageId}&key=${getKey(8)}`
         )
-        .then((res) => l(res.data)) // 検証用
+        .then((res) => cLog(res.data)) // 検証用
         .catch((e) => console.error("err")); // エラー処理
     }
 

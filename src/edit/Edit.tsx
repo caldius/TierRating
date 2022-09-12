@@ -13,12 +13,29 @@ import FormControlLabel from "@mui/material/FormControlLabel";
 import Radio from "@mui/material/Radio";
 import { Paper } from "@material-ui/core";
 import Typography from "@mui/material/Typography";
+import { useParams } from "react-router-dom";
 import { cLog, split } from "../Utils/Utils";
 import { siteUrl } from "../Utils/Defines";
 // import { Visibility, VisibilityOff } from "@mui/icons-material";
 
-export type Props = {
+export type EditProps = {
   //
+};
+
+export type itemInfoType = {
+  item_id: number;
+  item_name: string;
+  item_rate: number;
+  item_hensachi: number;
+  item_image_path: string;
+};
+
+export type pageInfoType = {
+  page_id: number;
+  page_name: string;
+  page_description: string;
+  which_is: string;
+  language: string;
 };
 
 /** NEWコマンドの返り値 新しくできたpage_idを返す 帰ってこなきゃ失敗のはず */
@@ -27,7 +44,10 @@ export type NewResponceType = { page_id: number };
 /** 言語種類 */
 export type LanguageType = "ja" | "en";
 
-const New: React.FC<Props> = (_props) => {
+const Edit: React.FC<EditProps> = (_props) => {
+  // URL受け取り
+  const { pageId } = useParams();
+
   const [isSending, setIsSending] = useState(false);
   const [pageTitleText, setPageTitleText] = useState<string>("");
   const [pageDescriptionText, setPageDescriptionText] = useState<string>("");
@@ -40,7 +60,6 @@ const New: React.FC<Props> = (_props) => {
   const [language, setLanguage] = React.useState<LanguageType>("ja");
 
   const isJA = language === "ja";
-  // const isEN = language === "en";
 
   /**
    * #### 投稿ボタン押下時の処理
@@ -335,4 +354,4 @@ const New: React.FC<Props> = (_props) => {
   );
 };
 
-export default New;
+export default Edit;

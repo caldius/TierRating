@@ -4,10 +4,11 @@ import { Link, useParams } from "react-router-dom";
 import axios, { AxiosError, AxiosResponse } from "axios";
 import "../App.css";
 import Rating from "../rating/Rating";
-import { average, getKey, l, standardScore, stdDev } from "../Utils/Utils";
+import { average, getKey, cLog, standardScore, stdDev } from "../Utils/Utils";
 
 import { TierTable } from "../tier-table/TierTable";
 import { siteUrl } from "../Utils/Defines";
+import { GoToUpdate } from "../go-to-update/GoToUpdate";
 // import { color } from "@mui/system";
 
 export type itemInfoType = {
@@ -43,7 +44,7 @@ const Pages: FC = () => {
       .get<itemInfoType[]>(`${siteUrl}/api/itemlist/?id=${pageId}&key=${getKey(8)}`)
       .then((res) => {
         // NOTE 検証用
-        l(res.data);
+        cLog(res.data);
 
         const rateArray: number[] = res.data.map((x) => x.item_rate);
         const avg = average(rateArray);
@@ -85,6 +86,7 @@ const Pages: FC = () => {
       <TierTable tierItemList={itemInfoList} />
 
       <span>このページをベースに新しいページを作る</span>
+      <GoToUpdate pageId={parseInt(pageId ?? "0", 10)} language={pageInfo?.language ?? ""} />
     </div>
   );
 };
