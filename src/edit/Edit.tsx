@@ -1,5 +1,5 @@
 import "../App.css";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
@@ -14,7 +14,7 @@ import Radio from "@mui/material/Radio";
 import { Paper } from "@material-ui/core";
 import Typography from "@mui/material/Typography";
 import { useParams } from "react-router-dom";
-import { cLog, split } from "../Utils/Utils";
+import { cLog, getKey, split } from "../Utils/Utils";
 import { siteUrl } from "../Utils/Defines";
 // import { Visibility, VisibilityOff } from "@mui/icons-material";
 
@@ -30,6 +30,14 @@ export type itemInfoType = {
   item_image_path: string;
 };
 
+export type tagInfoType = {
+  tag_id: number;
+  tag_name: string;
+  // page_description: string;
+  // which_is: string;
+  // language: string;
+};
+
 export type pageInfoType = {
   page_id: number;
   page_name: string;
@@ -38,6 +46,15 @@ export type pageInfoType = {
   language: string;
 };
 
+export type registeredImageType = {
+  item_image_path: string;
+  item_name: string;
+  item_id: number;
+};
+
+/** パスワード判定コマンドの返り値 Boolで成否を返す */
+export type PasswordCheckResultType = { is_verified: boolean };
+
 /** NEWコマンドの返り値 新しくできたpage_idを返す 帰ってこなきゃ失敗のはず */
 export type NewResponceType = { page_id: number };
 
@@ -45,8 +62,9 @@ export type NewResponceType = { page_id: number };
 export type LanguageType = "ja" | "en";
 
 const Edit: React.FC<EditProps> = (_props) => {
-  // URL受け取り
+  /** ページID URL受け取り */
   const { pageId } = useParams();
+  // const [itemInfoList, setItemInfoList] = useState<itemInfoType[]>([]);
 
   const [isSending, setIsSending] = useState(false);
   const [pageTitleText, setPageTitleText] = useState<string>("");
@@ -58,8 +76,57 @@ const Edit: React.FC<EditProps> = (_props) => {
   const [imageTitles, setImageTitles] = useState<string[]>([]);
   const inputId = Math.random().toString(32).substring(2);
   const [language, setLanguage] = React.useState<LanguageType>("ja");
+  const [deleteTargetItemIdList, setdeleteTargetItemIdList] = useState<number[]>([]);
+
+  const [registeredImages, setregisteredImages] = useState<registeredImageType[]>([]);
 
   const isJA = language === "ja";
+
+  // ページの基本情報をuseEffect()で取得
+  useEffect(() => {
+    axios
+      .get<pageInfoType>(`${siteUrl}/api/pageinfo/?page_id=${pageId}&key=${getKey(8)}`)
+      .then((res) => {
+        // NOTE:setItemInfoListするか個別ステータスにはめるか考え中
+        setPageTitleText(res.data.page_name);
+        setPageDescriptionText(res.data.page_description);
+        setLanguage(res.data.language as LanguageType);
+        setWhichIsText(res.data.which_is);
+        // setPageInfo(res.data);
+      })
+      .catch((_e) => {
+        cLog("err");
+      });
+  }, []);
+
+  // ページに紐付くタグ情報をuseEffect()で取得
+  useEffect(() => {
+    axios
+      .get<tagInfoType[]>(`${siteUrl}/api/pagetags/?page_id=${pageId}&key=${getKey(8)}`)
+      .then((res) => {
+        // 取得したタグ配列をテキストボックスにセットする(残りは空文字配列で埋めておく)
+        setTagNames(
+          res.data
+            .map((x) => x.tag_name)
+            .concat(["", "", "", "", "", "", "", "", "", ""])
+            .slice(0, 10)
+        );
+      })
+      .catch((_e) => console.error("err"));
+  }, []);
+
+  // ページに紐付くitem情報（各ｷｬﾗｸﾀｰ、画像たち）をuseEffect()で取得
+  useEffect(() => {
+    axios
+      .get<itemInfoType[]>(`${siteUrl}/api/itemlist/?id=${pageId}&key=${getKey(8)}`)
+      .then((res) => {
+        // NOTE:registeredimageにセット
+        setregisteredImages(
+          res.data.map((x) => ({ item_image_path: x.item_image_path, item_name: x.item_name, item_id: x.item_id }))
+        );
+      })
+      .catch((_e) => console.error("err"));
+  }, []);
 
   /**
    * #### 投稿ボタン押下時の処理
@@ -69,6 +136,30 @@ const Edit: React.FC<EditProps> = (_props) => {
   const handleOnSubmit = async (e: React.SyntheticEvent): Promise<void> => {
     // 本来のSUBMIT処理をpreventDefaultで防ぐ
     e.preventDefault();
+
+    // --------------------------------------------------------------
+    // パスワード認証を行う（メインコマンド内部でも行う）
+    const verifyTarget = e.target as typeof e.target & { password: { value: string } };
+
+    // 登録データ
+    const verifyData = new FormData();
+    // DATAに対して各情報を付け足す
+    verifyData.append("password", verifyTarget.password?.value || "");
+    verifyData.append("pageId", pageId ?? "");
+
+    // パスワード認証実行 boolを返す（ことにする）
+    const passwordCheckResult = await axios.post<PasswordCheckResultType>(`${siteUrl}/api/verify/`, verifyData);
+
+    // 成功した場合は/edit/NNNNに移動
+    if (passwordCheckResult.data.is_verified !== true) {
+      // pageId=""なら処理失敗と判断、ここで終了
+      cLog("ログイン失敗");
+      setIsSending(false);
+
+      return;
+    }
+    // --------------------------------------------------------------
+
     // isSendingで読み込み中にする
     setIsSending(true);
 
@@ -93,19 +184,24 @@ const Edit: React.FC<EditProps> = (_props) => {
     data.append("whichIs", target.whichIs?.value || "");
     data.append("language", target.language?.value || "");
     data.append("password", target.pwd?.value || "");
+    data.append("pageId", pageId || "");
 
     // 登録タグも配列化して渡す
-    tagNames.forEach((tagName) => data.append("tagName[]", tagName));
+    tagNames.forEach((x) => data.append("tagName[]", x));
+
+    // 削除対象itemIdも配列化して渡す
+    deleteTargetItemIdList.forEach((x) => data.append("deleteTargetItemId[]", x.toString()));
+
     // 中身の確認
     cLog(...data.entries());
 
     // 登録処理実行 登録されたpage_idを返す
-    const postedComment = await axios.post<NewResponceType>(`${siteUrl}/api/new/`, data);
+    const postedComment = await axios.post<NewResponceType>(`${siteUrl}/api/edit/`, data);
 
-    const pageId = `${postedComment?.data?.page_id ?? ""}`;
+    // const pageId = `${postedComment?.data?.page_id ?? ""}`;
 
-    if (pageId === "") {
-      // pageId=""なら処理失敗と判断、ここで終了
+    if (pageId !== (postedComment?.data?.page_id.toString() ?? "")) {
+      // 返却pageIdが既存と一致しないなら処理失敗と判断、ここで終了
       setIsSending(false);
 
       return;
@@ -122,7 +218,7 @@ const Edit: React.FC<EditProps> = (_props) => {
     for (let i = 0; i < splittedImages.length; i += 1) {
       const uploadData = new FormData();
 
-      uploadData.append("id", pageId);
+      uploadData.append("id", pageId ?? "");
       uploadData.append("create_count", `${i}`);
 
       splittedImages[i].forEach((image) => uploadData.append("images[]", image));
@@ -172,6 +268,19 @@ const Edit: React.FC<EditProps> = (_props) => {
     setImageTitles(newImageTitles);
   };
 
+  /**
+   * ### 既存データの削除ボタン押下処理
+   * - deleteTargetItemIdList配列に対象のItemIdを追加する。
+   * @param itemId クリックした対象のitemId(item_tblのPK)
+   */
+  const handleOnRemoveRegisteredImage = (itemId: number) => {
+    // 渡されたitemIdが含まれていなければ追加、すでに含まれていれば削除
+    const newList = !deleteTargetItemIdList.includes(itemId)
+      ? Array.from(new Set([...deleteTargetItemIdList, itemId]))
+      : Array.from(new Set([...deleteTargetItemIdList.filter((x) => x !== itemId)]));
+    setdeleteTargetItemIdList(newList);
+  };
+
   return (
     <Paper style={{ backgroundColor: "#efffef", margin: "4%", padding: "2%", textAlign: "center" }}>
       <form action="" onSubmit={(e) => handleOnSubmit(e)}>
@@ -182,13 +291,33 @@ const Edit: React.FC<EditProps> = (_props) => {
           onChange={(e) => setLanguage(e.target.value as LanguageType)}
         >
           <div style={{ display: "flex" }}>
-            <FormControlLabel value="ja" control={<Radio />} label="日本語" />
-            <FormControlLabel value="en" control={<Radio />} label="English" />
+            <FormControlLabel value="ja" control={<Radio disabled />} label="日本語" />
+            <FormControlLabel value="en" control={<Radio disabled />} label="English" />
           </div>
         </RadioGroup>
         <Typography variant="h5" gutterBottom component="div" m={0} mt={1} fontStyle="">
           {isJA ? "1. ページ情報入力" : "1. Input page info"}
         </Typography>
+
+        {/* ---------- */}
+        {/* パスワード */}
+        {/* ---------- */}
+        <Paper style={{ padding: "1%", marginBottom: "1%" }}>
+          <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "center", padding: "2%" }}>
+            <TextField
+              name="pwd"
+              value={pwd}
+              style={{ width: "15em" }}
+              label={isJA ? "パスワード" : "password"}
+              required
+              helperText={isJA ? "登録時のパスワード（必須）" : "password you registered"}
+              size="small"
+              disabled={isSending}
+              type="password"
+              onChange={(e) => setPwd(e.target.value)}
+            />
+          </div>
+        </Paper>
         {/* -------- */}
         {/* タイトル */}
         {/* -------- */}
@@ -263,35 +392,60 @@ const Edit: React.FC<EditProps> = (_props) => {
               ))
             }
           </div>
-
-          {/* ---------- */}
-          {/* パスワード */}
-          {/* ---------- */}
-          <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "center", padding: "2%" }}>
-            <TextField
-              name="pwd"
-              value={pwd}
-              style={{ width: "15em" }}
-              label={isJA ? "パスワード" : "password"}
-              helperText={
-                isJA ? "登録後に編集する可能性がなければ不要" : "Unnecessary If not to edit after registration"
-              }
-              size="small"
-              disabled={isSending}
-              type="password"
-              onChange={(e) => setPwd(e.target.value)}
-            />
-          </div>
         </Paper>
         <br />
         {/* -------------- */}
         {/* 画像選択ボタン */}
         {/* -------------- */}
+        {/* <Typography variant="h5" gutterBottom component="div" m={0} mt={1} fontStyle=""> */}
+        {/* {isJA ? "2. 画像選択" : "2. Select images and Input name"} */}
+        {/* </Typography> */}
         <Typography variant="h5" gutterBottom component="div" m={0} mt={1} fontStyle="">
           {isJA ? "2. 画像選択" : "2. Select images and Input name"}
         </Typography>
 
         <Paper style={{ padding: "1%", marginBottom: "1%" }}>
+          {/* ------------ */}
+          {/* 画像一覧↓↓ */}
+          {/* ------------ */}
+          <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "center", padding: "4%" }}>
+            {/* 画像を選択したら選択中のすべての画像のプレビューを表示 */}
+            {registeredImages.map((x) => (
+              <Paper
+                key={x.item_id}
+                style={{
+                  position: "relative",
+                  padding: "1%",
+                  marginBottom: "1%",
+                  backgroundColor: deleteTargetItemIdList.includes(x.item_id) ? "#696969" : "#efffef",
+                }}
+              >
+                <IconButton
+                  size="small"
+                  aria-label="delete image"
+                  style={{ position: "absolute", top: 5, left: 5, color: "#b11" }}
+                  onClick={() => handleOnRemoveRegisteredImage(x.item_id)}
+                  tabIndex={-1}
+                >
+                  <CancelTwoToneIcon />
+                </IconButton>
+                <img alt={x.item_name} src={x.item_image_path} style={{ height: "70px" }} />
+                <TextField
+                  name="registeredImageTitle"
+                  value={x.item_name}
+                  label="Image Title"
+                  size="small"
+                  style={{ width: "7em" }}
+                  disabled
+                />
+              </Paper>
+            ))}
+          </div>
+          {/* -------------- */}
+          {/* 画像選択ボタン */}
+          {/* -------------- */}
+
+          {/* <Paper style={{ padding: "1%", marginBottom: "1%" }}> */}
           <label htmlFor={inputId}>
             <Button variant="contained" component="span">
               {isJA ? "画像追加" : "ADD ITEM IMAGE"}
@@ -307,14 +461,13 @@ const Edit: React.FC<EditProps> = (_props) => {
               style={{ display: "none" }}
             />
           </label>
-          {/* ------------ */}
-          {/* 画像一覧↓↓ */}
-          {/* ------------ */}
           <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "center", padding: "4%" }}>
-            {/* 画像を選択したら選択中のすべての画像のプレビューを表示 */}
             {images.length === 0 && <Typography>画像未選択</Typography>}
             {images.map((image, i) => (
-              <div key={`${image.name}${i * 1}`} style={{ position: "relative" }}>
+              <Paper
+                key={`${image.name}${i * 1}`}
+                style={{ position: "relative", padding: "1%", marginBottom: "1%", backgroundColor: "#efffef" }}
+              >
                 <IconButton
                   size="small"
                   aria-label="delete image"
@@ -336,7 +489,7 @@ const Edit: React.FC<EditProps> = (_props) => {
                   // 配列を書き換えたものをset関数に投げる
                   onChange={(e) => setImageTitles(imageTitles.map((x, idx) => (i === idx ? e.target.value : x)))}
                 />
-              </div>
+              </Paper>
             ))}
           </div>
         </Paper>

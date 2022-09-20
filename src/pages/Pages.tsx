@@ -4,7 +4,7 @@ import { Link, useParams } from "react-router-dom";
 import axios, { AxiosError, AxiosResponse } from "axios";
 import "../App.css";
 import Rating from "../rating/Rating";
-import { average, getKey, cLog, standardScore, stdDev } from "../Utils/Utils";
+import { getAverage, getKey, cLog, calcStandardScore, getStdDev } from "../Utils/Utils";
 
 import { TierTable } from "../tier-table/TierTable";
 import { siteUrl } from "../Utils/Defines";
@@ -47,10 +47,10 @@ const Pages: FC = () => {
         cLog(res.data);
 
         const rateArray: number[] = res.data.map((x) => x.item_rate);
-        const avg = average(rateArray);
-        const sd = stdDev(rateArray, avg);
+        const avg = getAverage(rateArray);
+        const sd = getStdDev(rateArray, avg);
 
-        const hensachiArray: number[] = rateArray.map((x) => standardScore(x, avg, sd));
+        const hensachiArray: number[] = rateArray.map((x) => calcStandardScore(x, avg, sd));
 
         const itemInfoWithHensachi: itemInfoType[] = res.data.map((x, i) => ({
           ...x,

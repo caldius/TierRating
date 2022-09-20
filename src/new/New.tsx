@@ -295,7 +295,10 @@ const New: React.FC<Props> = (_props) => {
             {/* 画像を選択したら選択中のすべての画像のプレビューを表示 */}
             {images.length === 0 && <Typography>画像未選択</Typography>}
             {images.map((image, i) => (
-              <div key={`${image.name}${i * 1}`} style={{ position: "relative" }}>
+              <Paper
+                key={`${image.name}${i * 1}`}
+                style={{ position: "relative", padding: "1%", marginBottom: "1%", backgroundColor: "#efffef" }}
+              >
                 <IconButton
                   size="small"
                   aria-label="delete image"
@@ -317,7 +320,7 @@ const New: React.FC<Props> = (_props) => {
                   // 配列を書き換えたものをset関数に投げる
                   onChange={(e) => setImageTitles(imageTitles.map((x, idx) => (i === idx ? e.target.value : x)))}
                 />
-              </div>
+              </Paper>
             ))}
           </div>
         </Paper>

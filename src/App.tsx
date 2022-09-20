@@ -19,7 +19,7 @@ const App: FC = () => (
       <Route path="/" element={<Home />} />
       <Route path="/about" element={<About />} />
       <Route path="/new" element={<New />} />
-      <Route path="/edit" element={<Edit />} />
+      <Route path="/edit/:pageId" element={<Edit />} />
       <Route path="/list" element={<PageList />} />
       {/* <Route path="/create" element={<Create />} /> */}
       <Route path="/pages/:pageId" element={<Pages />} />

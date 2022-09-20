@@ -5,7 +5,7 @@
  * @param message
  * @returns
  */
-export const cLog = (...message: unknown[]): boolean => {
+export const cLog = (...message: unknown[]): true => {
   console.log(message);
 
   return true;
@@ -68,7 +68,7 @@ export const calcRoundDp = (tgtNum: number, roundKbn: number, keta: number): num
  * @param scores
  * @returns
  */
-export const average = (scores: number[]) =>
+export const getAverage = (scores: number[]) =>
   calcRoundDp(scores.reduce((acc, current) => acc + current, 0) / scores.length, 2, 2);
 
 /**
@@ -77,7 +77,7 @@ export const average = (scores: number[]) =>
  * @param avg
  * @returns
  */
-export const variance = (scores: number[], avg: number) =>
+export const getVariance = (scores: number[], avg: number) =>
   calcRoundDp(scores.reduce((acc, current) => acc + (current - avg) ** 2, 0) / scores.length, 2, 2);
 
 /**
@@ -86,7 +86,7 @@ export const variance = (scores: number[], avg: number) =>
  * @param avg
  * @returns
  */
-export const stdDev = (scores: number[], avg: number) => calcRoundDp(Math.sqrt(variance(scores, avg)), 2, 2);
+export const getStdDev = (scores: number[], avg: number) => calcRoundDp(Math.sqrt(getVariance(scores, avg)), 2, 2);
 
 /**
  * 偏差値
@@ -95,7 +95,7 @@ export const stdDev = (scores: number[], avg: number) => calcRoundDp(Math.sqrt(v
  * @param sd
  * @returns
  */
-export const standardScore = (score: number, avg: number, sd: number) =>
+export const calcStandardScore = (score: number, avg: number, sd: number) =>
   calcRoundDp(((score - avg) * 10) / sd + 50, 2, 2) || 50;
 // ↓使用例
 // スコア一覧
