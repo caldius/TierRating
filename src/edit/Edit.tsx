@@ -56,7 +56,7 @@ export type registeredImageType = {
 export type PasswordCheckResultType = { is_verified: boolean };
 
 /** NEWコマンドの返り値 新しくできたpage_idを返す 帰ってこなきゃ失敗のはず */
-export type NewResponceType = { page_id: number };
+export type ApiEditResponseType = { page_id: number };
 
 /** 言語種類 */
 export type LanguageType = "ja" | "en";
@@ -136,15 +136,17 @@ const Edit: React.FC<EditProps> = (_props) => {
   const handleOnSubmit = async (e: React.SyntheticEvent): Promise<void> => {
     // 本来のSUBMIT処理をpreventDefaultで防ぐ
     e.preventDefault();
+    // isSendingで読み込み中にする
+    setIsSending(true);
 
     // --------------------------------------------------------------
     // パスワード認証を行う（メインコマンド内部でも行う）
-    const verifyTarget = e.target as typeof e.target & { password: { value: string } };
+    const verifyTarget = e.target as typeof e.target & { pwd: { value: string } };
 
     // 登録データ
     const verifyData = new FormData();
     // DATAに対して各情報を付け足す
-    verifyData.append("password", verifyTarget.password?.value || "");
+    verifyData.append("password", verifyTarget.pwd?.value || "");
     verifyData.append("pageId", pageId ?? "");
 
     // パスワード認証実行 boolを返す（ことにする）
@@ -196,7 +198,7 @@ const Edit: React.FC<EditProps> = (_props) => {
     cLog(...data.entries());
 
     // 登録処理実行 登録されたpage_idを返す
-    const postedComment = await axios.post<NewResponceType>(`${siteUrl}/api/edit/`, data);
+    const postedComment = await axios.post<ApiEditResponseType>(`${siteUrl}/api/edit/`, data);
 
     // const pageId = `${postedComment?.data?.page_id ?? ""}`;
 
@@ -228,7 +230,10 @@ const Edit: React.FC<EditProps> = (_props) => {
       console.log(...uploadData.entries());
 
       // eslint-disable-next-line no-await-in-loop
-      const uploadResult = await axios.post<NewResponceType>("https://www.tierrating.com/api/uploadfiles/", uploadData);
+      const uploadResult = await axios.post<ApiEditResponseType>(
+        "https://www.tierrating.com/api/uploadfiles/",
+        uploadData
+      );
 
       console.log(uploadResult);
     }
@@ -278,6 +283,8 @@ const Edit: React.FC<EditProps> = (_props) => {
     const newList = !deleteTargetItemIdList.includes(itemId)
       ? Array.from(new Set([...deleteTargetItemIdList, itemId]))
       : Array.from(new Set([...deleteTargetItemIdList.filter((x) => x !== itemId)]));
+
+    cLog(newList);
     setdeleteTargetItemIdList(newList);
   };
 
@@ -454,7 +461,7 @@ const Edit: React.FC<EditProps> = (_props) => {
               id={inputId}
               type="file"
               multiple
-              required
+              // required
               accept="image/*,.png,.jpg,.jpeg,.gif"
               disabled={isSending}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleOnAddImage(e)}
