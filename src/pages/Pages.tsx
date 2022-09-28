@@ -85,7 +85,7 @@ const Pages: FC = () => {
       <Link to="/" />
       <TierTable tierItemList={itemInfoList} />
 
-      <span>このページをベースに新しいページを作る</span>
+      <span>このページを編集</span>
       <GoToUpdate pageId={parseInt(pageId ?? "0", 10)} language={pageInfo?.language ?? ""} />
     </div>
   );

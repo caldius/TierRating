@@ -1,3 +1,4 @@
+import { Typography } from "@material-ui/core";
 import "../App.css";
 
 export type TierTableRowProps = {
@@ -17,19 +18,18 @@ export const TierTableRow = (props: TierTableRowProps) => {
     <>
       <th style={{ backgroundColor: colorCode, whiteSpace: "nowrap", padding: "0.5em" }}>{headerTitle}</th>
       <td>
-        {tierItemList.map((row) => (
-          <div style={{ display: "inline-block", textAlign: "center" }} key={row.item_id}>
+        {tierItemList.map((x) => (
+          <div style={{ display: "inline-block", textAlign: "center" }} key={x.item_id}>
             <img
-              // key={row.item_id}
-              src={`${row.item_image_path}`}
-              alt={`${row.item_name}`}
-              title={`${row.item_name} / ${row.item_rate}`}
+              src={`${x.item_image_path}`}
+              alt={`${x.item_name}`}
+              title={`${x.item_name} / ${x.item_rate}`}
               width={60}
             />
             {isDispItemInfo ? (
               <>
-                <p style={{ marginBlock: 0, fontSize: 8 }}>{row.item_name}</p>
-                <p style={{ marginBlock: 0, fontSize: 8 }}>{`/ ${row.item_rate}`}</p>
+                <Typography style={{ marginBlock: 0, fontSize: 8, color: "#CCC" }}>{x.item_name}</Typography>
+                <Typography style={{ marginBlock: 0, fontSize: 8, color: "#CCC" }}>{`R${x.item_rate}`}</Typography>
               </>
             ) : undefined}
           </div>

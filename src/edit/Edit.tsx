@@ -176,7 +176,6 @@ const Edit: React.FC<EditProps> = (_props) => {
     // -------------
     // 登録処理１
     // -------------
-
     // 登録データ
     const data = new FormData();
 
@@ -188,10 +187,8 @@ const Edit: React.FC<EditProps> = (_props) => {
     data.append("password", target.pwd?.value || "");
     data.append("pageId", pageId || "");
 
-    // 登録タグも配列化して渡す
+    // 登録タグと削除対象itemIdリストも配列化して渡すも配列化して渡す
     tagNames.forEach((x) => data.append("tagName[]", x));
-
-    // 削除対象itemIdも配列化して渡す
     deleteTargetItemIdList.forEach((x) => data.append("deleteTargetItemId[]", x.toString()));
 
     // 中身の確認
@@ -227,7 +224,7 @@ const Edit: React.FC<EditProps> = (_props) => {
       splittedImageTitles[i].forEach((imageTitle) => uploadData.append("imageTitle[]", imageTitle));
 
       // 中身の確認
-      console.log(...uploadData.entries());
+      cLog(...uploadData.entries());
 
       // eslint-disable-next-line no-await-in-loop
       const uploadResult = await axios.post<ApiEditResponseType>(
@@ -235,10 +232,9 @@ const Edit: React.FC<EditProps> = (_props) => {
         uploadData
       );
 
-      console.log(uploadResult);
+      cLog(uploadResult);
     }
     // 登録処理に成功してるっぽかったら画面遷移、直接でええやろ(適当)
-    // window.location.href = `https://www.tierrating.com/pages/${postedComment?.data?.page_id}`;
     window.location.href = `${siteUrl}/pages/${postedComment?.data?.page_id}`;
 
     // 読み込み中終了
@@ -283,8 +279,7 @@ const Edit: React.FC<EditProps> = (_props) => {
     const newList = !deleteTargetItemIdList.includes(itemId)
       ? Array.from(new Set([...deleteTargetItemIdList, itemId]))
       : Array.from(new Set([...deleteTargetItemIdList.filter((x) => x !== itemId)]));
-
-    cLog(newList);
+    // cLog(newList);
     setdeleteTargetItemIdList(newList);
   };
 
